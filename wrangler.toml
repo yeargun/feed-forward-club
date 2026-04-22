@@ -1,8 +1,11 @@
-# Cloudflare Pages — local: npm run deploy  |  GitHub: .github/workflows/deploy-cloudflare-pages.yml
-# Repo secrets: CLOUDFLARE_API_TOKEN, CLOUDFLARE_ACCOUNT_ID (dash.cloudflare.com → your account id in the URL)
-# Custom domain: Pages → this project → Custom domains → www.feedforwardclub.com
-# If the dashboard is also “Connected to Git” for this repo, turn that off to avoid two deploys per push.
+# Cloudflare Workers — local: npm run deploy  |  GitHub: .github/workflows/deploy-cloudflare-pages.yml
+# Repo secrets: CLOUDFLARE_API_TOKEN, CLOUDFLARE_ACCOUNT_ID
 
-name = "feedforwardclub"
+name = "feed-forward-club"
+main = "./worker/index.js"
 compatibility_date = "2025-10-15"
-pages_build_output_dir = "dist"
+workers_dev = true
+
+[assets]
+directory = "./dist"
+binding = "ASSETS"
