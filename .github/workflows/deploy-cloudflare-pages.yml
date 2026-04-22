@@ -4,6 +4,7 @@ name: Deploy to Cloudflare Pages
 # in the Cloudflare dashboard (Workers & Pages → Git), disable one path or you will get two deploys per push.
 on:
   push:
+    branches: [master]
   workflow_dispatch:
 
 permissions:
@@ -38,5 +39,5 @@ jobs:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           wranglerVersion: "4"
-          command: pages deploy dist --project-name=feedforwardclub
+          command: pages deploy dist --project-name=feedforwardclub --branch=master
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
