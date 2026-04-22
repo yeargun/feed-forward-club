@@ -8,12 +8,17 @@
     "start": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "deploy": "astro build && wrangler pages deploy",
+    "pages:preview": "astro build && wrangler pages dev dist"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.2.1",
     "astro": "^4.16.0",
     "cobe": "^2.0.1",
     "sass": "^1.99.0"
+  },
+  "devDependencies": {
+    "wrangler": "^4.20.0"
   }
 }

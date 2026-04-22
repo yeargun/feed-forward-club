@@ -1,0 +1,42 @@
+name: Deploy to Cloudflare Pages
+
+# Uses Wrangler (same as `npm run deploy` locally). If you also connect this repo
+# in the Cloudflare dashboard (Workers & Pages → Git), disable one path or you will get two deploys per push.
+on:
+  push:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  deployments: write
+
+concurrency:
+  group: cloudflare-pages-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    name: Build and deploy
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+
+      - name: Install and build
+        run: npm ci && npm run build
+        env:
+          PUBLIC_SITE_URL: https://www.feedforwardclub.com
+
+      - name: Publish to Cloudflare Pages
+        id: deploy
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          wranglerVersion: "4"
+          command: pages deploy dist --project-name=feedforwardclub
+          gitHubToken: ${{ secrets.GITHUB_TOKEN }}

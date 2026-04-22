@@ -11,7 +11,7 @@ const env = loadEnv(
 );
 const site =
   env.PUBLIC_SITE_URL ||
-  'https://feedforwardclub.com';
+  'https://www.feedforwardclub.com';
 
 // Absolute path so @use resolves from every component, regardless of location.
 const tokensPath = fileURLToPath(new URL('./src/styles/_tokens.scss', import.meta.url))
