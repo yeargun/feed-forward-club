@@ -1,0 +1,140 @@
+---
+import Layout from "../layouts/Layout.astro";
+import CTA from "../components/CTA.astro";
+
+const crew = [
+  {
+    name: "@yeargun",
+    role: "Steward",
+    bio: "Holds the standards while the culture sets. Founder",
+    accent: true,
+  },
+  {
+    name: "Seat open",
+    role: "Host",
+    bio: "Rotates between members. Holds the room, keeps time, and makes sure the quieter voices get the air.",
+  },
+  {
+    name: "Seat open",
+    role: "Memory",
+    bio: "Writes up what each member commits to try next. Sends gentle reminders so the momentum does not evaporate.",
+  },
+];
+---
+
+<Layout
+  title="Crew"
+  description="Crew is not status, it is responsibility. The small group holding FeedForwardClub's standards while the culture sets in."
+>
+  <section class="hero">
+    <div class="container">
+      <span class="eyebrow">Crew</span>
+      <h1>The small group <em class="accent">holding the line.</em></h1>
+      <p class="lede">
+        Crew is not status. It is responsibility. Someone holds the room.
+        Someone keeps the memory. Someone reminds us what we said we would
+        try next. That is the role, until the culture holds itself.
+      </p>
+    </div>
+  </section>
+
+  <hr class="rule" />
+
+  <section class="section">
+    <div class="container">
+      <div class="crew-grid">
+        {crew.map((m) => (
+          <div class:list={["crew-card", { accent: m.accent }]}>
+            <div class="avatar" aria-hidden="true">
+              {m.name.replace("@", "").slice(0, 1).toUpperCase()}
+            </div>
+            <div class="role">{m.role}</div>
+            <h3>{m.name}</h3>
+            <p>{m.bio}</p>
+          </div>
+        ))}
+      </div>
+
+      <p class="footnote">
+        No hierarchy, yet. See <a href="/manifesto" class="link-accent">item IV of the manifesto</a>
+        for the reasoning.
+      </p>
+    </div>
+  </section>
+
+  <hr class="rule" />
+
+  <section class="section page-cta">
+    <div class="container">
+      <h2>Want in, or want to talk?</h2>
+      <CTA variant="stack" />
+    </div>
+  </section>
+</Layout>
+
+<style lang="scss">
+  .hero {
+    padding: clamp(72px, 10vw, 140px) 0 clamp(32px, 5vw, 64px);
+
+    .lede { max-width: 680px; margin-top: 16px; }
+    h1 em.accent { font-style: italic; color: $accent; }
+  }
+
+  .crew-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+  @media (max-width: $bp-lg) { .crew-grid { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: $bp-sm) { .crew-grid { grid-template-columns: 1fr; } }
+
+  .crew-card {
+    background: $paper;
+    border: 1px solid $rule;
+    border-radius: $radius-lg;
+    padding: 28px;
+
+    &.accent {
+      border-color: $accent;
+      box-shadow: 0 0 0 4px $accent-soft;
+    }
+
+    h3 { margin: 0 0 8px; font-size: 22px; }
+    p { color: $ink-soft; margin: 0; }
+  }
+
+  .avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: $radius;
+    background: $accent-soft;
+    color: $accent-deep;
+    display: grid;
+    place-items: center;
+    font-family: $font-serif;
+    font-size: 24px;
+    font-weight: 500;
+    margin-bottom: 20px;
+  }
+
+  .role {
+    font-size: $fs-meta;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: $muted;
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+
+  .footnote {
+    margin-top: 32px;
+    color: $muted;
+    font-size: 14px;
+  }
+
+  .page-cta {
+    background: $paper;
+    border-top: 1px solid $rule;
+    border-bottom: 1px solid $rule;
+  }
+</style>

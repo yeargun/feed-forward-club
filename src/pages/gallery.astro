@@ -1,0 +1,217 @@
+---
+import Layout from "../layouts/Layout.astro";
+import CTA from "../components/CTA.astro";
+import { gallery } from "../data/gallery";
+import { formatEventDate } from "../data/events";
+
+// Simple deterministic hue generator from the slug so each placeholder
+// gets its own hue but stays in the brand range.
+function hueFromSlug(slug: string): number {
+  let h = 0;
+  for (const ch of slug) h = (h * 31 + ch.charCodeAt(0)) >>> 0;
+  return h % 360;
+}
+---
+
+<Layout
+  title="Gallery"
+  description="Photos from FeedForwardClub sessions, chapters, and topical circles. Moments from the room."
+>
+  <section class="hero">
+    <div class="container">
+      <span class="eyebrow">Gallery</span>
+      <h1>Moments from <em class="accent">the room.</em></h1>
+      <p class="lede">
+        Photos from sessions, chapters, and topical circles. The set is thin
+        for now, because we are early. It fills out session by session.
+      </p>
+    </div>
+  </section>
+
+  <hr class="rule" />
+
+  <section class="section">
+    <div class="wide">
+      <div class="grid">
+        {gallery.map((g) => {
+          const hue = hueFromSlug(g.slug);
+          return (
+            <figure class:list={["item", { featured: g.featured }]}>
+              <div class="media">
+                {g.src ? (
+                  <img src={g.src} alt={g.alt ?? g.title} loading="lazy" />
+                ) : (
+                  <div
+                    class="placeholder"
+                    style={`--h: ${hue}; --h2: ${(hue + 40) % 360};`}
+                    role="img"
+                    aria-label={`${g.title} (placeholder)`}
+                  >
+                    <span class="ph-mark" aria-hidden="true">
+                      <span class="dot"></span>
+                      <span class="ph-label">{g.title}</span>
+                    </span>
+                  </div>
+                )}
+              </div>
+              <figcaption>
+                <div class="cap-head">
+                  <h3>{g.title}</h3>
+                  <time>{formatEventDate(g.date)}</time>
+                </div>
+                {(g.city || g.country) && (
+                  <div class="loc">{g.city}{g.country && `, ${g.country}`}</div>
+                )}
+                {g.caption && <p>{g.caption}</p>}
+              </figcaption>
+            </figure>
+          );
+        })}
+      </div>
+    </div>
+  </section>
+
+  <hr class="rule" />
+
+  <section class="section page-cta">
+    <div class="container">
+      <h2>Want to be in the next photo?</h2>
+      <CTA variant="stack" />
+    </div>
+  </section>
+</Layout>
+
+<style lang="scss">
+  .hero {
+    padding: clamp(72px, 10vw, 140px) 0 clamp(32px, 5vw, 64px);
+
+    .lede { max-width: 640px; margin-top: 16px; }
+    h1 em.accent { font-style: italic; color: $accent; }
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    grid-auto-flow: dense;
+  }
+  @media (max-width: $bp-lg) { .grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: $bp-sm) { .grid { grid-template-columns: 1fr; } }
+
+  .item {
+    margin: 0;
+    background: $paper;
+    border: 1px solid $rule;
+    border-radius: $radius-lg;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+
+    &.featured {
+      grid-column: span 2;
+
+      @media (max-width: $bp-lg) { grid-column: span 2; }
+      @media (max-width: $bp-sm) { grid-column: auto; }
+    }
+  }
+
+  .media {
+    aspect-ratio: 4 / 3;
+    background: $bg;
+    position: relative;
+    overflow: hidden;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+  }
+
+  .placeholder {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    place-items: center;
+    background:
+      radial-gradient(circle at 30% 30%, hsl(var(--h) 40% 82%) 0%, transparent 55%),
+      radial-gradient(circle at 70% 70%, hsl(var(--h2) 50% 80%) 0%, transparent 55%),
+      linear-gradient(135deg, hsl(var(--h) 30% 94%), hsl(var(--h2) 35% 90%));
+
+    .ph-mark {
+      display: grid;
+      gap: 10px;
+      justify-items: center;
+      padding: 16px;
+      text-align: center;
+    }
+    .dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: $accent;
+      box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.6);
+    }
+    .ph-label {
+      font-family: $font-serif;
+      font-size: 18px;
+      color: $ink;
+      max-width: 240px;
+      line-height: 1.2;
+    }
+  }
+
+  figcaption {
+    padding: 16px 18px 20px;
+    display: grid;
+    gap: 6px;
+  }
+
+  .cap-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
+
+    h3 {
+      margin: 0;
+      font-size: 17px;
+      font-family: $font-sans;
+      font-weight: 600;
+      letter-spacing: -0.005em;
+    }
+    time {
+      font-family: $font-serif;
+      font-style: italic;
+      color: $accent-deep;
+      font-size: 13px;
+      flex-shrink: 0;
+      margin-left: auto;
+    }
+  }
+
+  @media (max-width: $bp-sm) {
+    .cap-head time { margin-left: 0; }
+  }
+
+  .loc {
+    font-size: 12px;
+    color: $muted;
+    letter-spacing: 0.02em;
+  }
+
+  figcaption p {
+    margin: 4px 0 0;
+    color: $ink-soft;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  .page-cta {
+    background: $paper;
+    border-top: 1px solid $rule;
+    border-bottom: 1px solid $rule;
+  }
+</style>

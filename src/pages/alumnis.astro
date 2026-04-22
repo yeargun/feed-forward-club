@@ -1,0 +1,190 @@
+---
+import Layout from "../layouts/Layout.astro";
+import CTA from "../components/CTA.astro";
+
+type Alum = {
+  name: string;
+  company?: string;
+  from: string;
+  to: string;
+  outcome: string;
+  link?: string;
+};
+
+const alumni: Alum[] = [
+  {
+    name: "Placeholder Alum",
+    company: "Company A",
+    from: "2025-Q1",
+    to: "2025-Q4",
+    outcome: "Pivoted twice, found the shape, now shipping.",
+  },
+  {
+    name: "Placeholder Alum",
+    company: "Company B",
+    from: "2024-Q4",
+    to: "2025-Q3",
+    outcome: "Hit product-market signal, hired first engineer.",
+  },
+  {
+    name: "Placeholder Alum",
+    company: "Company C",
+    from: "2025-Q2",
+    to: "2026-Q1",
+    outcome: "Closed the idea, started something better.",
+  },
+  {
+    name: "Placeholder Alum",
+    company: "Company D",
+    from: "2024-Q2",
+    to: "2025-Q1",
+    outcome: "Raised. No longer needs the room every week; still shows up for others.",
+  },
+];
+---
+
+<Layout
+  title="Alumni"
+  description="FeedForwardClub alumni. Founders who rotated out because they shipped, pivoted, or outgrew the room. Always welcome back."
+>
+  <section class="hero">
+    <div class="container">
+      <span class="eyebrow">Alumni</span>
+      <h1>The room <em class="accent">graduates.</em></h1>
+      <p class="lede">
+        People rotate out because they shipped, because they moved on, or
+        because their stage outgrew what this room is best at. That is a
+        feature, not a loss. Everyone here is welcome back at any time.
+      </p>
+    </div>
+  </section>
+
+  <hr class="rule" />
+
+  <section class="section">
+    <div class="container">
+      <ol class="timeline">
+        {alumni.map((a) => (
+          <li class="item">
+            <div class="dot" aria-hidden="true"></div>
+            <div class="when">
+              <span class="from">{a.from}</span>
+              <span class="sep">→</span>
+              <span class="to">{a.to}</span>
+            </div>
+            <div class="body">
+              <h3>
+                {a.link ? <a href={a.link}>{a.name}</a> : a.name}
+                {a.company && <span class="co"> · {a.company}</span>}
+              </h3>
+              <p>{a.outcome}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
+
+      <p class="footnote">
+        Dates approximate. Real names added as people opt in.
+      </p>
+    </div>
+  </section>
+
+  <hr class="rule" />
+
+  <section class="section bottom-cta">
+    <div class="container">
+      <h2>Were you in the room? <span class="mark">Come back anytime.</span></h2>
+      <p class="lede">
+        Alumni seats are always open. Write to us, then show up.
+      </p>
+      <CTA variant="stack" contactFirst />
+    </div>
+  </section>
+</Layout>
+
+<style lang="scss">
+  .hero {
+    padding: clamp(72px, 10vw, 140px) 0 clamp(32px, 5vw, 64px);
+
+    .lede { max-width: 680px; margin-top: 16px; }
+    h1 em.accent { font-style: italic; color: $accent; }
+  }
+
+  .timeline {
+    list-style: none;
+    margin: 0;
+    padding: 0 0 0 28px;
+    position: relative;
+    border-left: 1px solid $rule;
+  }
+  .item {
+    position: relative;
+    padding: 20px 0;
+    border-bottom: 1px dashed $rule;
+    display: grid;
+    grid-template-columns: 180px 1fr;
+    gap: 24px;
+
+    &:last-child { border-bottom: 0; }
+  }
+  .dot {
+    position: absolute;
+    left: -33px;
+    top: 28px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: $accent;
+    box-shadow: 0 0 0 3px $accent-soft;
+  }
+  .when {
+    font-family: $font-serif;
+    font-size: 18px;
+    color: $ink-soft;
+
+    .sep { color: $accent; margin: 0 6px; }
+  }
+  .body {
+    h3 {
+      margin: 0 0 4px;
+      font-size: 22px;
+
+      a {
+        color: $ink;
+        text-decoration: none;
+
+        &:hover {
+          color: $accent-deep;
+          text-decoration: underline;
+        }
+      }
+    }
+    p { margin: 0; color: $ink-soft; }
+  }
+  .co {
+    color: $muted;
+    font-weight: 400;
+    font-style: italic;
+  }
+
+  @media (max-width: $bp-md) {
+    .item { grid-template-columns: 1fr; gap: 10px; }
+    .when { font-size: 17px; }
+  }
+
+  @media (max-width: $bp-sm) {
+    .when { font-size: 16px; }
+  }
+
+  .footnote {
+    margin-top: 32px;
+    color: $muted;
+    font-size: 14px;
+  }
+
+  .bottom-cta {
+    background: $paper;
+    border-top: 1px solid $rule;
+    border-bottom: 1px solid $rule;
+  }
+</style>

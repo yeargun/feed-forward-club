@@ -1,0 +1,64 @@
+// ---------------------------------------------------------------------------
+//  FeedForwardClub — design tokens
+//  Palette: clean cool-neutral surfaces, prussian-ink blue primary, warm amber
+//  used very sparingly for "forward" emphasis.
+// ---------------------------------------------------------------------------
+
+// — surfaces (cool neutrals, zero warm cast) ---------------------------------
+$bg:          #FAFAFA;   // clean near-white
+$bg-deep:     #F3F3F5;   // cool light gray — alternating sections
+$paper:       #FFFFFF;   // pure white cards
+$paper-soft:  #F4F4F6;   // hover surface
+$ink:         #0B0B0D;   // rich near-black
+$ink-soft:    #3F3F46;   // secondary text
+$muted:       #71717A;   // tertiary / meta text — cool gray
+$rule:        #E4E4E7;   // hairline borders — cool
+$rule-soft:   #EEEEF0;
+$shadow:      rgba(11, 11, 13, 0.08);
+
+// — primary accent: prussian ink blue -----------------------------------------
+$accent:        #1F3A68;
+$accent-deep:   #102849;
+$accent-soft:   #DDE3F0;
+$accent-ink:    $bg;  // readable text on accent surface
+
+// — secondary accent: warm amber — reserved for "forward" only ----------------
+$amber:        #B87328;
+$amber-deep:   #8A541A;
+$amber-soft:   #F0E2CC;
+
+// — semantic ------------------------------------------------------------------
+$ok:   #2F6B4A;
+$warn: $amber;
+$err:  #9E2B2B;
+
+// — typography ----------------------------------------------------------------
+$font-display: "Instrument Serif", "Source Serif 4", Georgia, serif;
+$font-sans:    "Plus Jakarta Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI",
+               Roboto, "Helvetica Neue", Arial, sans-serif;
+$font-serif:   "Source Serif 4", "Iowan Old Style", "Palatino Linotype", Palatino,
+               "Book Antiqua", Georgia, serif;
+$font-mono:    ui-monospace, "SFMono-Regular", Menlo, Monaco, Consolas,
+               "Liberation Mono", monospace;
+
+// — metrics -------------------------------------------------------------------
+$max:       1080px;
+$max-wide:  1280px;
+$pad:       clamp(20px, 4vw, 40px);
+$radius-sm: 6px;
+$radius:    10px;
+$radius-lg: 14px;
+
+// — breakpoints ---------------------------------------------------------------
+$bp-sm: 520px;
+$bp-md: 760px;
+$bp-lg: 960px;
+
+// — type scale ----------------------------------------------------------------
+$fs-h1:    clamp(40px, 6vw, 72px);
+$fs-h2:    clamp(28px, 4vw, 44px);
+$fs-h3:    clamp(20px, 2.4vw, 26px);
+$fs-lede:  clamp(19px, 2.1vw, 24px);
+$fs-body:  16px;
+$fs-small: 14px;
+$fs-meta:  12px;

@@ -1,0 +1,266 @@
+---
+export interface FieldDef {
+  name: string;
+  label: string;
+  type?: "text" | "email" | "url" | "textarea";
+  required?: boolean;
+  placeholder?: string;
+  rows?: number;
+  hint?: string;
+  autocomplete?: string;
+}
+
+interface Props {
+  /** Unique DOM id for this form instance. */
+  formId: string;
+  /** String sent as `type` in the JSON body (e.g. "apply", "contact"). */
+  formType: string;
+  /** POST URL. Empty string → form still renders but surfaces a notice on submit. */
+  endpoint: string;
+  fields: FieldDef[];
+  submitLabel?: string;
+  /** Shown on successful submission. */
+  successMessage?: string;
+  /** Shown on failure (fetch error, non-2xx, or missing endpoint). */
+  errorMessage?: string;
+}
+
+const {
+  formId,
+  formType,
+  endpoint,
+  fields,
+  submitLabel = "Send",
+  successMessage = "Got it. We'll read every line and reply.",
+  errorMessage = "Didn't go through. Please try again or email us directly.",
+} = Astro.props;
+---
+
+<form
+  id={formId}
+  class="ffc-form"
+  data-endpoint={endpoint}
+  data-form-type={formType}
+  data-success-message={successMessage}
+  data-error-message={errorMessage}
+  novalidate
+>
+  {fields.map((f) => (
+    <div class="field">
+      <label for={`${formId}-${f.name}`}>
+        {f.label}
+        {f.required && <span class="req" aria-hidden="true">*</span>}
+      </label>
+      {f.type === "textarea" ? (
+        <textarea
+          id={`${formId}-${f.name}`}
+          name={f.name}
+          rows={f.rows ?? 4}
+          required={f.required}
+          placeholder={f.placeholder ?? ""}
+        />
+      ) : (
+        <input
+          id={`${formId}-${f.name}`}
+          name={f.name}
+          type={f.type ?? "text"}
+          required={f.required}
+          placeholder={f.placeholder ?? ""}
+          autocomplete={f.autocomplete ?? "off"}
+        />
+      )}
+      {f.hint && <div class="hint">{f.hint}</div>}
+    </div>
+  ))}
+
+  {/* Honeypot — real users won't fill this; bots typically do. */}
+  <div class="hp" aria-hidden="true">
+    <label for={`${formId}-hp`}>Leave this blank</label>
+    <input
+      id={`${formId}-hp`}
+      name="_hp"
+      type="text"
+      tabindex="-1"
+      autocomplete="off"
+    />
+  </div>
+
+  <div class="actions">
+    <button type="submit" class="btn">{submitLabel}</button>
+    <div class="form-status" role="status" aria-live="polite" data-state="idle"></div>
+  </div>
+</form>
+
+<script>
+  const forms = document.querySelectorAll<HTMLFormElement>("form.ffc-form");
+
+  forms.forEach((form) => {
+    const statusEl = form.querySelector<HTMLElement>(".form-status");
+    const submitBtn = form.querySelector<HTMLButtonElement>('button[type="submit"]');
+    const endpoint = form.dataset.endpoint ?? "";
+    const formType = form.dataset.formType ?? "generic";
+    const successMsg = form.dataset.successMessage ?? "Sent.";
+    const errorMsg = form.dataset.errorMessage ?? "Didn't go through.";
+    const missingEndpointMsg =
+      "Our submission backend is not wired up yet. Please use the email link below.";
+
+    const setStatus = (
+      text: string,
+      state: "idle" | "pending" | "ok" | "err",
+    ) => {
+      if (!statusEl) return;
+      statusEl.textContent = text;
+      statusEl.dataset.state = state;
+    };
+
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+
+      if (!form.checkValidity()) {
+        form.reportValidity();
+        return;
+      }
+
+      const fd = new FormData(form);
+
+      if (fd.get("_hp")) {
+        // Pretend success to the bot, do nothing.
+        setStatus(successMsg, "ok");
+        form.reset();
+        return;
+      }
+
+      if (!endpoint) {
+        setStatus(missingEndpointMsg, "err");
+        return;
+      }
+
+      const payload: Record<string, unknown> = { type: formType };
+      fd.forEach((value, key) => {
+        if (key === "_hp") return;
+        payload[key] = value;
+      });
+
+      setStatus("Sending…", "pending");
+      if (submitBtn) submitBtn.disabled = true;
+
+      try {
+        const res = await fetch(endpoint, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        setStatus(successMsg, "ok");
+        form.reset();
+      } catch (err) {
+        console.error("[ffc-form]", err);
+        setStatus(errorMsg, "err");
+      } finally {
+        if (submitBtn) submitBtn.disabled = false;
+      }
+    });
+  });
+</script>
+
+<style lang="scss">
+  .ffc-form {
+    display: grid;
+    gap: 22px;
+    max-width: 620px;
+  }
+
+  .field {
+    display: grid;
+    gap: 8px;
+
+    label {
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: $ink;
+    }
+
+    .req {
+      color: $amber-deep;
+      margin-left: 4px;
+    }
+
+    input,
+    textarea {
+      font-family: $font-sans;
+      font-size: 15px;
+      color: $ink;
+      background: $paper;
+      border: 1px solid $rule;
+      border-radius: $radius-sm;
+      padding: 12px 14px;
+      width: 100%;
+      transition: border-color 140ms ease, box-shadow 140ms ease,
+        background 140ms ease;
+
+      &::placeholder { color: $muted; }
+
+      &:hover { background: $paper-soft; }
+
+      &:focus {
+        outline: none;
+        border-color: $accent;
+        box-shadow: 0 0 0 3px $accent-soft;
+        background: $paper;
+      }
+
+      &:invalid:not(:placeholder-shown) {
+        border-color: $err;
+      }
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 96px;
+      line-height: 1.5;
+    }
+
+    .hint {
+      font-size: 13px;
+      color: $muted;
+    }
+  }
+
+  .hp {
+    position: absolute;
+    left: -10000px;
+    top: auto;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+
+  .actions {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-top: 8px;
+
+    :global(.btn) {
+      min-width: 140px;
+      justify-content: center;
+    }
+  }
+
+  .form-status {
+    font-size: 14px;
+    color: $ink-soft;
+
+    &[data-state="pending"] { color: $muted; }
+    &[data-state="ok"]      { color: $ok; }
+    &[data-state="err"]     { color: $err; }
+  }
+
+  button[type="submit"]:disabled {
+    opacity: 0.6;
+    cursor: wait;
+  }
+</style>

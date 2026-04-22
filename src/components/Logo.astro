@@ -1,0 +1,134 @@
+---
+interface Props {
+  /**
+   * full     — monogram + wordmark + "GROW. CONNECT. BUILD."
+   * wordmark — monogram + wordmark
+   * mark     — monogram only
+   */
+  variant?: "full" | "wordmark" | "mark";
+  class?: string;
+}
+
+const { variant = "full", class: cls } = Astro.props;
+
+const showWordmark = variant !== "mark";
+const showSlogan   = variant === "full";
+
+const viewBoxMap: Record<string, string> = {
+  full:     "360 185 880 555",
+  wordmark: "360 185 880 470",
+  mark:     "480 185 640 305",
+};
+---
+
+<svg
+  class:list={["ffc-logo", `ffc-logo--${variant}`, cls]}
+  viewBox={viewBoxMap[variant]}
+  xmlns="http://www.w3.org/2000/svg"
+  role="img"
+  aria-label="FeedForwardClub"
+>
+  <!-- FF monogram -->
+  <g class="logo-mark">
+    <path class="mark-lf"
+      d="M560 205 L725 205 L710 255 L630 255 L615 310 L700 310 L685 360 L600 360 L570 470 L500 470 Z"/>
+    <path class="mark-rf"
+      d="M760 205 L925 205 L910 255 L830 255 L815 310 L900 310 L885 360 L800 360 L770 470 L700 470 Z"/>
+    <path class="mark-arrow"
+      d="M930 310 L1010 310 L1010 275 L1090 330 L1010 385 L1010 350 L920 350 Z"/>
+  </g>
+
+  {showWordmark && (
+    <text
+      class="logo-wordmark"
+      x="800" y="615"
+      text-anchor="middle"
+      font-family="Avenir Next, Gotham, Montserrat, Helvetica Neue, Arial, sans-serif"
+      font-size="102"
+    >
+      <tspan font-weight="300">feed</tspan><tspan font-weight="800">forward</tspan><tspan font-weight="300">club</tspan>
+    </text>
+  )}
+
+  {showSlogan && (
+    <text
+      class="logo-slogan"
+      x="800" y="710"
+      text-anchor="middle"
+      font-family="Avenir Next, Gotham, Montserrat, Helvetica Neue, Arial, sans-serif"
+      font-size="36"
+      font-weight="400"
+      letter-spacing="10"
+    >GROW. CONNECT. BUILD.</text>
+  )}
+</svg>
+
+<style lang="scss">
+  .ffc-logo {
+    display: block;
+    overflow: visible;
+  }
+
+  // — fills --------------------------------------------------------------------
+  .logo-mark     { fill: $ink; }
+  .logo-wordmark { fill: $ink; }
+  .logo-slogan   { fill: $muted; }
+
+  // — entrance animations ------------------------------------------------------
+
+  .mark-lf {
+    transform-box: fill-box;
+    transform-origin: center top;
+    animation: ffc-reveal 0.5s cubic-bezier(0.4, 0, 0.2, 1) both;
+  }
+
+  .mark-rf {
+    transform-box: fill-box;
+    transform-origin: center top;
+    animation: ffc-reveal 0.5s cubic-bezier(0.4, 0, 0.2, 1) 0.1s both;
+  }
+
+  .mark-arrow {
+    transform-box: fill-box;
+    transform-origin: left center;
+    animation: ffc-arrow 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) 0.28s both;
+  }
+
+  .logo-wordmark {
+    animation: ffc-rise 0.45s ease 0.5s both;
+  }
+
+  .logo-slogan {
+    animation: ffc-fade 0.5s ease 0.72s both;
+  }
+
+  @keyframes ffc-reveal {
+    from { transform: scaleY(0); }
+    to   { transform: scaleY(1); }
+  }
+
+  @keyframes ffc-arrow {
+    from { transform: translateX(-22px) scaleX(0.35); opacity: 0; }
+    to   { transform: translateX(0) scaleX(1); opacity: 1; }
+  }
+
+  @keyframes ffc-rise {
+    from { transform: translateY(12px); opacity: 0; }
+    to   { transform: translateY(0); opacity: 1; }
+  }
+
+  @keyframes ffc-fade {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .mark-lf,
+    .mark-rf,
+    .mark-arrow,
+    .logo-wordmark,
+    .logo-slogan {
+      animation: none;
+    }
+  }
+</style>

@@ -1,0 +1,91 @@
+---
+import { siteName, siteUrl, siteTagline, siteDescription } from "../data/config";
+
+interface Props {
+  /** Page title (used as-is, suffix added). Omit on home. */
+  title?: string;
+  description?: string;
+  /** Canonical path override. Defaults to Astro.url.pathname. */
+  path?: string;
+  /** OG image path, site-relative or absolute. */
+  image?: string;
+  type?: "website" | "article";
+  /** Render Organization JSON-LD (home page only). */
+  organization?: boolean;
+}
+
+const {
+  title,
+  description = siteDescription,
+  path,
+  image = "/og-image.svg",
+  type = "website",
+  organization = false,
+} = Astro.props;
+
+const pathname = (path ?? Astro.url.pathname) || "/";
+
+const fullTitle = title
+  ? `${title} · ${siteName}`
+  : `${siteName} · ${siteTagline.replace(/\.$/, "").toLowerCase()}`;
+
+const canonical = new URL(pathname, siteUrl).toString();
+const absImage = image.startsWith("http")
+  ? image
+  : new URL(image, siteUrl).toString();
+
+const orgJsonLd = organization
+  ? {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      name: siteName,
+      url: siteUrl,
+      description: siteDescription,
+      logo: new URL("/favicon.svg", siteUrl).toString(),
+      sameAs: [] as string[],
+    }
+  : null;
+
+const webSiteJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: siteName,
+  url: siteUrl,
+  description: siteDescription,
+};
+---
+
+<title>{fullTitle}</title>
+<meta name="description" content={description} />
+<link rel="canonical" href={canonical} />
+
+<meta name="robots" content="index, follow, max-image-preview:large" />
+<meta name="author" content={siteName} />
+<meta name="theme-color" content="#1F3A68" />
+<meta name="color-scheme" content="light" />
+<meta name="format-detection" content="telephone=no" />
+
+<!-- Open Graph -->
+<meta property="og:site_name" content={siteName} />
+<meta property="og:type" content={type} />
+<meta property="og:title" content={fullTitle} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={canonical} />
+<meta property="og:image" content={absImage} />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content={`${siteName}. ${siteTagline}`} />
+<meta property="og:locale" content="en_US" />
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={fullTitle} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={absImage} />
+<meta name="twitter:image:alt" content={`${siteName}. ${siteTagline}`} />
+
+<!-- JSON-LD -->
+<script type="application/ld+json" set:html={JSON.stringify(webSiteJsonLd)} />
+{orgJsonLd && (
+  <script type="application/ld+json" set:html={JSON.stringify(orgJsonLd)} />
+)}

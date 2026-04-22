@@ -1,0 +1,198 @@
+// Tokens are auto-injected via astro.config.mjs additionalData.
+
+* { box-sizing: border-box; }
+*::selection { background: $accent; color: $accent-ink; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: $bg;
+  color: $ink;
+  font-family: $font-sans;
+  font-size: $fs-body;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  text-wrap: balance;
+}
+
+main {
+  min-width: 0;
+}
+
+a {
+  color: $ink;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
+  text-decoration-color: $rule;
+  transition: color 120ms ease, text-decoration-color 120ms ease;
+
+  &:hover {
+    color: $accent-deep;
+    text-decoration-color: currentColor;
+  }
+}
+
+h1, h2, h3, h4 {
+  font-family: $font-serif;
+  font-weight: 600;
+  font-optical-sizing: auto;
+  letter-spacing: -0.02em;
+  margin: 0 0 0.4em;
+  line-height: 1.05;
+  color: $ink;
+}
+
+h3, h4 {
+  font-weight: 500;
+  letter-spacing: -0.012em;
+  line-height: 1.15;
+}
+
+h1 {
+  font-family: $font-display;
+  font-size: $fs-h1;
+  font-weight: 400;
+  letter-spacing: -0.028em;
+  line-height: 1.02;
+}
+h2 { font-size: $fs-h2; }
+h3 { font-size: $fs-h3; }
+
+p { margin: 0 0 1em; }
+
+.container {
+  max-width: $max;
+  margin: 0 auto;
+  padding: 0 $pad;
+}
+
+.wide {
+  max-width: $max-wide;
+  margin: 0 auto;
+  padding: 0 $pad;
+}
+
+.eyebrow {
+  display: inline-block;
+  font-size: $fs-meta;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: $accent;
+  font-weight: 600;
+  margin-bottom: 16px;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 20px;
+  background: $accent;
+  color: $accent-ink;
+  border-radius: $radius-sm;
+  font-weight: 500;
+  text-decoration: none;
+  transition: background 140ms ease, transform 120ms ease, color 140ms ease;
+  border: 1px solid $accent;
+
+  &:hover {
+    background: $accent-deep;
+    color: $accent-ink;
+    border-color: $accent-deep;
+  }
+}
+
+.btn-ghost {
+  background: transparent;
+  color: $ink;
+  border: 1px solid $ink;
+
+  &:hover {
+    background: $ink;
+    color: $bg;
+  }
+}
+
+.rule {
+  height: 1px;
+  background: $rule;
+  border: 0;
+  margin: 0;
+}
+
+.section { padding: clamp(56px, 8vw, 120px) 0; }
+
+.grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(24px, 4vw, 64px);
+}
+.grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+.grid-4 {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+@media (max-width: $bp-md) {
+  .grid-2 { grid-template-columns: 1fr; }
+  .grid-3 { grid-template-columns: 1fr 1fr; }
+  .grid-4 { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: $bp-sm) {
+  .grid-3, .grid-4 { grid-template-columns: 1fr; }
+}
+
+.card {
+  background: $paper;
+  border: 1px solid $rule;
+  border-radius: $radius;
+  padding: 28px;
+}
+
+.lede {
+  font-family: $font-serif;
+  font-size: $fs-lede;
+  line-height: 1.38;
+  color: $ink-soft;
+}
+
+.mark {
+  background: linear-gradient(180deg, transparent 62%, $accent-soft 62%);
+  padding: 0 2px;
+}
+
+.link-accent {
+  color: $accent-deep;
+  text-decoration: none;
+  font-weight: 500;
+
+  &:hover { text-decoration: underline; }
+}
+
+.tag {
+  display: inline-block;
+  font-size: $fs-meta;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: $accent-soft;
+  color: $accent-deep;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+
+// Forward-motion emphasis (used sparingly — the terracotta beat)
+.forward {
+  font-style: italic;
+  color: $amber-deep;
+}

@@ -1,0 +1,106 @@
+---
+import Layout from "../layouts/Layout.astro";
+import CTA from "../components/CTA.astro";
+import { news, formatEventDate } from "../data/events";
+---
+
+<Layout
+  title="News"
+  description="Short updates from FeedForwardClub: applications, new circles, and chapter signals."
+>
+  <section class="hero">
+    <div class="container">
+      <span class="eyebrow">News</span>
+      <h1>Chapter <em class="accent">signals.</em></h1>
+      <p class="lede">Short notes. No noise. Bigger stories still happen in the room.</p>
+    </div>
+  </section>
+
+  <hr class="rule" />
+
+  <section class="section">
+    <div class="container">
+      <ol class="feed">
+        {news.map((item) => (
+          <li>
+            <time datetime={item.date}>{formatEventDate(item.date)}</time>
+            <h2>
+              {item.link ? (
+                <a href={item.link}>{item.headline}</a>
+              ) : (
+                item.headline
+              )}
+            </h2>
+            {item.blurb && <p class="b">{item.blurb}</p>}
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <section class="section cta">
+    <div class="container">
+      <h2>Closer to the action</h2>
+      <CTA variant="stack" />
+    </div>
+  </section>
+</Layout>
+
+<style lang="scss">
+  .hero {
+    padding: clamp(72px, 10vw, 140px) 0 clamp(32px, 5vw, 64px);
+
+    h1 em.accent {
+      font-style: italic;
+      color: $accent;
+    }
+
+    .lede {
+      max-width: 480px;
+      margin-top: 16px;
+    }
+  }
+
+  .feed {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    max-width: 680px;
+  }
+
+  .feed li {
+    padding: 0 0 1.5rem 0;
+    margin: 0 0 1.5rem;
+    border-bottom: 1px solid $rule;
+  }
+
+  .feed time {
+    font-size: $fs-meta;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: $muted;
+    font-weight: 600;
+  }
+
+  .feed h2 {
+    font-size: $fs-h3;
+    font-weight: 600;
+    margin: 0.35em 0 0.25em;
+    line-height: 1.2;
+
+    a {
+      text-decoration: none;
+      color: $ink;
+    }
+  }
+
+  .b {
+    color: $ink-soft;
+    font-size: $fs-body;
+  }
+
+  .cta {
+    background: $paper;
+    border-top: 1px solid $rule;
+  }
+</style>

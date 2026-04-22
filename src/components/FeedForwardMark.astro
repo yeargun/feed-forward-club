@@ -1,0 +1,108 @@
+---
+---
+
+<p class="ff-mark" aria-label="What's next">
+  <svg
+    class="ff-svg"
+    viewBox="0 0 320 48"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    aria-hidden="true"
+  >
+    <defs>
+      <linearGradient id="ff-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+        <stop offset="0%" class="ff-stop-a" />
+        <stop offset="100%" class="ff-stop-b" />
+      </linearGradient>
+    </defs>
+    <text
+      x="0"
+      y="34"
+      class="ff-text"
+      font-size="32"
+      font-family="Source Serif 4, Georgia, serif"
+      font-style="italic"
+      font-weight="500"
+    >
+      What's next
+    </text>
+    <path
+      class="ff-stroke"
+      d="M 4 40 Q 100 26 200 32 T 310 30"
+      stroke="url(#ff-grad)"
+      stroke-width="2.2"
+      stroke-linecap="round"
+      fill="none"
+      pathLength="100"
+    />
+    <path
+      class="ff-arrow"
+      d="M 298 24 L 312 30 L 298 36"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      fill="none"
+    />
+  </svg>
+</p>
+
+<style lang="scss">
+  .ff-mark {
+    margin: 0.35em 0 0.15em;
+    max-width: min(100%, 340px);
+  }
+
+  .ff-svg {
+    display: block;
+    width: 100%;
+    height: auto;
+    color: $amber-deep;
+  }
+
+  .ff-text {
+    fill: $ink;
+  }
+
+  .ff-stop-a {
+    stop-color: $accent;
+  }
+
+  .ff-stop-b {
+    stop-color: $amber;
+  }
+
+  .ff-stroke {
+    stroke-dasharray: 100;
+    stroke-dashoffset: 100;
+    animation: ff-draw 2.2s ease-out forwards;
+  }
+
+  .ff-arrow {
+    opacity: 0;
+    animation: ff-fade 0.4s ease 1.4s forwards;
+  }
+
+  @keyframes ff-draw {
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+
+  @keyframes ff-fade {
+    to {
+      opacity: 1;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ff-stroke {
+      animation: none;
+      stroke-dashoffset: 0;
+    }
+    .ff-arrow {
+      opacity: 1;
+      animation: none;
+    }
+  }
+</style>

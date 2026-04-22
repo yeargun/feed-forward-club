@@ -1,0 +1,147 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Form from "../components/Form.astro";
+import { contactEndpoint, contactEmail, contactMailto } from "../data/config";
+
+const fields = [
+  {
+    name: "name",
+    label: "Your name",
+    required: true,
+    placeholder: "First & last",
+    autocomplete: "name",
+  },
+  {
+    name: "email",
+    label: "Email",
+    type: "email" as const,
+    required: true,
+    placeholder: "you@domain.com",
+    autocomplete: "email",
+  },
+  {
+    name: "subject",
+    label: "Subject (optional)",
+    placeholder: "What's this about?",
+  },
+  {
+    name: "message",
+    label: "Message",
+    type: "textarea" as const,
+    required: true,
+    rows: 6,
+    placeholder: "Ask a question, make an introduction, or tell us we got something wrong.",
+  },
+];
+---
+
+<Layout
+  title="Contact"
+  description="Get in touch with FeedForwardClub. Use the form or email directly. We read every line."
+>
+  <section class="hero">
+    <div class="container">
+      <span class="eyebrow">Contact</span>
+      <h1>Get in <em class="accent">touch.</em></h1>
+      <p class="lede">
+        Questions, introductions, corrections, or a simple "this exists?"
+        are all welcome. Use the form or email us directly. Either way
+        reaches the same inbox.
+      </p>
+    </div>
+  </section>
+
+  <hr class="rule" />
+
+  <section class="section form-section">
+    <div class="container grid">
+      <div class="form-col">
+        <Form
+          formId="contact-form"
+          formType="contact"
+          endpoint={contactEndpoint}
+          fields={fields}
+          submitLabel="Send message"
+          successMessage="Thanks. We will get back to you soon."
+          errorMessage="Didn't go through. Try again, or email us directly."
+        />
+
+        <p class="fallback">
+          Prefer email? Write to
+          <a href={contactMailto} class="link-accent">{contactEmail}</a>.
+        </p>
+      </div>
+
+      <aside class="side">
+        <div class="card">
+          <h4>Are you applying?</h4>
+          <p>
+            If you want to join the circle, the apply form asks more
+            targeted questions and routes to a different inbox.
+          </p>
+          <a href="/apply" class="link-accent">Go to /apply →</a>
+        </div>
+        <div class="card">
+          <h4>Press and partnerships</h4>
+          <p>
+            Keep it short and tell us specifically what you are hoping for.
+            We reply to almost everything within a week.
+          </p>
+        </div>
+      </aside>
+    </div>
+  </section>
+</Layout>
+
+<style lang="scss">
+  .hero {
+    padding: clamp(72px, 10vw, 140px) 0 clamp(24px, 4vw, 48px);
+
+    .lede { max-width: 640px; margin-top: 16px; }
+    h1 em.accent { font-style: italic; color: $accent; }
+  }
+
+  .form-section { padding-top: clamp(32px, 5vw, 56px); }
+
+  .grid {
+    display: grid;
+    grid-template-columns: 1.25fr 1fr;
+    gap: clamp(32px, 5vw, 72px);
+    align-items: start;
+  }
+  @media (max-width: $bp-lg) {
+    .grid { grid-template-columns: 1fr; }
+  }
+
+  .fallback {
+    margin-top: 28px;
+    padding-top: 20px;
+    border-top: 1px solid $rule;
+    color: $muted;
+    font-size: 14px;
+  }
+
+  .side {
+    display: grid;
+    gap: 20px;
+  }
+
+  .card {
+    padding: 24px;
+    background: $paper;
+    border: 1px solid $rule;
+    border-radius: $radius;
+
+    h4 {
+      font-family: $font-sans;
+      font-size: $fs-meta;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: $accent-deep;
+      margin: 0 0 12px;
+      font-weight: 600;
+    }
+
+    p { color: $ink-soft; margin: 0 0 12px; }
+  }
+</style>

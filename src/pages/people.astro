@@ -1,0 +1,308 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Globe from "../components/Globe.astro";
+import CTA from "../components/CTA.astro";
+import MemberLinks from "../components/MemberLinks.astro";
+import {
+  members,
+  memberCount,
+  stageLabel,
+} from "../data/members";
+import { chapters, activeChapters, formingChapters } from "../data/groups";
+---
+
+<Layout
+  title="People"
+  description="Who is in the room at FeedForwardClub. A global founders' circle, currently anchored in Ankara and growing one city at a time."
+>
+  <section class="hero">
+    <div class="wide hero-grid">
+      <div class="hero-copy">
+        <span class="eyebrow">People</span>
+        <h1>Who is in <em class="accent">the room.</em></h1>
+        <p class="lede">
+          A snapshot. Some are building, some are pre-building, some shipped
+          years ago and still come back because the advice here is hard to get
+          elsewhere.
+        </p>
+
+        <div class="summary">
+          <div class="cell">
+            <div class="n">{memberCount}</div>
+            <div class="l">{memberCount === 1 ? "member" : "members"}</div>
+          </div>
+          <div class="cell">
+            <div class="n">{activeChapters.length}</div>
+            <div class="l">active {activeChapters.length === 1 ? "chapter" : "chapters"}</div>
+          </div>
+          <div class="cell">
+            <div class="n">{formingChapters.length}</div>
+            <div class="l">forming</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-globe">
+        <Globe chapters={chapters} size={320} meta={false} />
+      </div>
+    </div>
+  </section>
+
+  <hr class="rule" />
+
+  <section class="section directory">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow">Directory</span>
+        <h2>One card, one human.</h2>
+        <p class="section-lede">Stage and tags on the page; the rest is wherever you already build in public.</p>
+      </div>
+
+      <div class="people-grid">
+        {members.map((p) => (
+          <article class:list={["person", { "person--winner": p.winner }]}>
+            <div class="person-head">
+              <div class="avatar" aria-hidden="true">
+                {p.name.split(" ").map((s) => s[0]).slice(0, 2).join("")}
+              </div>
+              <div class="person-id">
+                <h3>{p.name}</h3>
+                <div class="location">
+                  {p.handle && <span class="handle">{p.handle}</span>}
+                  {p.handle && <span class="dot" aria-hidden="true">·</span>}
+                  <span>{p.city}{p.country && `, ${p.country}`}</span>
+                </div>
+              </div>
+            </div>
+
+            <MemberLinks
+              name={p.name}
+              website={p.website}
+              linkedin={p.linkedin}
+              instagram={p.instagram}
+              github={p.github}
+            />
+
+            <p class="working">{p.working_on}</p>
+            <div class="meta">
+              <span class="stage">{stageLabel[p.stage]}</span>
+              {p.tags.map((t) => <span class="chip">{t}</span>)}
+            </div>
+          </article>
+        ))}
+      </div>
+
+      <p class="footnote">
+        Names and details fill in as members opt in.
+      </p>
+    </div>
+  </section>
+
+  <hr class="rule" />
+
+  <section class="section page-cta">
+    <div class="container">
+      <h2>See yourself on this page?</h2>
+      <p class="lede">
+        Applications are reviewed as they arrive. Sessions run regularly.
+      </p>
+      <CTA variant="stack" />
+    </div>
+  </section>
+</Layout>
+
+<style lang="scss">
+  .hero {
+    padding: clamp(72px, 10vw, 140px) 0 clamp(32px, 5vw, 64px);
+
+    h1 em.accent { font-style: italic; color: $accent; }
+    .lede { max-width: 640px; margin-top: 16px; }
+  }
+
+  .hero-grid {
+    display: grid;
+    grid-template-columns: 1.3fr 1fr;
+    gap: clamp(32px, 5vw, 64px);
+    align-items: center;
+    min-width: 0;
+  }
+
+  .hero-copy,
+  .hero-globe {
+    min-width: 0;
+  }
+
+  @media (max-width: $bp-lg) {
+    .hero-grid { grid-template-columns: 1fr; }
+    .hero-globe { order: -1; max-width: 300px; margin: 0 auto; width: 100%; }
+  }
+
+  .summary {
+    margin-top: 36px;
+    display: flex;
+    gap: 36px;
+    flex-wrap: wrap;
+
+    .n {
+      font-family: $font-serif;
+      font-size: 32px;
+      line-height: 1;
+      color: $ink;
+    }
+    .l {
+      font-size: $fs-meta;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: $muted;
+      font-weight: 600;
+      margin-top: 6px;
+    }
+  }
+
+  .section-head {
+    margin-bottom: clamp(28px, 4vw, 40px);
+    max-width: 52ch;
+  }
+  .section-lede {
+    margin: 12px 0 0;
+    font-size: $fs-small;
+    color: $muted;
+    line-height: 1.5;
+  }
+
+  .directory {
+    background: linear-gradient(180deg, $bg 0%, $bg-deep 12%, $bg 100%);
+  }
+
+  .people-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 22px;
+  }
+  @media (max-width: $bp-lg) { .people-grid { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: $bp-sm) { .people-grid { grid-template-columns: 1fr; } }
+
+  .person {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    background: $paper;
+    border: 1px solid $rule;
+    border-radius: $radius-lg;
+    padding: 22px 22px 20px;
+    box-shadow: 0 4px 28px -10px $shadow;
+    transition:
+      box-shadow 0.18s ease,
+      border-color 0.18s ease,
+      transform 0.18s ease;
+
+    &:hover {
+      box-shadow: 0 12px 40px -14px $shadow;
+      border-color: $rule-soft;
+      transform: translateY(-2px);
+    }
+  }
+  .person--winner {
+    background: mix($paper, $amber-soft, 86%);
+    border-color: mix($rule, $amber, 78%);
+
+    &::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 20px;
+      right: 20px;
+      height: 3px;
+      border-radius: 0 0 3px 3px;
+      background: linear-gradient(90deg, $amber, $amber-deep);
+    }
+  }
+
+  .person-head {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    margin-bottom: 10px;
+  }
+
+  .person-id h3 {
+    margin: 0 0 4px;
+    font-size: 19px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+  }
+
+  .location {
+    font-size: 12px;
+    color: $muted;
+    line-height: 1.4;
+  }
+  .location .handle { color: $ink-soft; }
+  .location .dot {
+    margin: 0 4px;
+    opacity: 0.7;
+  }
+
+  .avatar {
+    flex-shrink: 0;
+    width: 44px;
+    height: 44px;
+    border-radius: $radius;
+    background: $accent-soft;
+    color: $accent-deep;
+    display: grid;
+    place-items: center;
+    font-weight: 600;
+    font-size: 14px;
+    letter-spacing: 0.04em;
+  }
+
+  .working {
+    color: $ink-soft;
+    font-size: $fs-small;
+    line-height: 1.5;
+    min-height: 2.7em;
+    margin: 0 0 14px;
+    flex: 1;
+  }
+
+  .meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: auto;
+    padding-top: 12px;
+    border-top: 1px solid $rule;
+  }
+  .stage {
+    font-size: $fs-meta;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: $accent-deep;
+    padding: 3px 8px;
+    border: 1px solid $accent;
+    border-radius: 999px;
+  }
+  .chip {
+    font-size: $fs-meta;
+    padding: 3px 8px;
+    border-radius: 999px;
+    background: $bg;
+    border: 1px solid $rule;
+    color: $ink-soft;
+  }
+
+  .footnote {
+    margin-top: 40px;
+    color: $muted;
+    font-size: 14px;
+  }
+
+  .page-cta {
+    background: $paper;
+    border-top: 1px solid $rule;
+    border-bottom: 1px solid $rule;
+  }
+</style>

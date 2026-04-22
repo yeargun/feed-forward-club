@@ -1,0 +1,308 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Globe from "../components/Globe.astro";
+import CTA from "../components/CTA.astro";
+import {
+  chapters,
+  topics,
+  statusLabel,
+  statusNote,
+  activeChapters,
+  formingChapters,
+  plannedChapters,
+} from "../data/groups";
+---
+
+<Layout
+  title="Groups"
+  description="Chapters and topical circles inside FeedForwardClub. Find the room closest to what you are building, or help start one."
+>
+  <section class="hero">
+    <div class="wide hero-grid">
+      <div class="hero-copy">
+        <span class="eyebrow">Groups</span>
+        <h1>Find the room <em class="accent">nearest to you.</em></h1>
+        <p class="lede">
+          FeedForwardClub runs as a set of small rooms. Chapters meet by city.
+          Topical circles meet around an area of focus. If you do not see
+          yours yet, help us start it.
+        </p>
+
+        <div class="quick">
+          <a href="#chapters" class="quick-item">
+            <div class="n">{chapters.length}</div>
+            <div class="l">Chapters</div>
+          </a>
+          <a href="#topics" class="quick-item">
+            <div class="n">{topics.length}</div>
+            <div class="l">Topics</div>
+          </a>
+          <div class="quick-item static">
+            <div class="n">{activeChapters.length}</div>
+            <div class="l">Active</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-globe">
+        <Globe chapters={chapters} size={340} meta={false} />
+      </div>
+    </div>
+  </section>
+
+  <hr class="rule" />
+
+  <!-- CHAPTERS -->
+  <section class="section" id="chapters">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow">Chapters · by city</span>
+        <h2>Where we meet, or want to.</h2>
+        <p class="sub">
+          One home base, several cities on our map. If one is yours, raise
+          your hand. If one is not on the list, propose it.
+        </p>
+      </div>
+
+      <div class="group-grid">
+        {chapters.map((c) => (
+          <article class:list={["group", `s-${c.status}`]}>
+            <header>
+              <span class:list={["status", `s-${c.status}`]}>{statusLabel[c.status]}</span>
+              <h3>{c.name}</h3>
+              <div class="loc">{c.city}, {c.country}</div>
+            </header>
+            <p class="note">{c.note ?? statusNote[c.status]}</p>
+            <footer>
+              {c.memberCount != null && (
+                <span class="count">
+                  <strong>{c.memberCount}</strong> {c.memberCount === 1 ? "member" : "members"}
+                </span>
+              )}
+              <a href={`/apply?group=${c.slug}`} class="apply-link">
+                {c.status === "active" ? "Apply →" : "Raise your hand →"}
+              </a>
+            </footer>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <hr class="rule" />
+
+  <!-- TOPICS -->
+  <section class="section" id="topics">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow">Topics · by focus</span>
+        <h2>What we meet about.</h2>
+        <p class="sub">
+          Topical circles run alongside chapters. Same principle, same room
+          size. Just organized around what you are building, not where you live.
+        </p>
+      </div>
+
+      <div class="group-grid">
+        {topics.map((t) => (
+          <article class:list={["group", `s-${t.status}`]}>
+            <header>
+              <span class:list={["status", `s-${t.status}`]}>{statusLabel[t.status]}</span>
+              <h3>{t.name}</h3>
+            </header>
+            <p class="note">{t.blurb}</p>
+            <footer>
+              <span class="hint">{statusNote[t.status]}</span>
+              <a href={`/apply?group=${t.slug}`} class="apply-link">Raise your hand →</a>
+            </footer>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <hr class="rule" />
+
+  <section class="section page-cta">
+    <div class="container">
+      <h2>Do not see your circle? <span class="mark">Start it.</span></h2>
+      <p class="lede">
+        Chapters and topics only work when someone local or specialist
+        volunteers to host. If that is you, write to us.
+      </p>
+      <CTA variant="stack" contactFirst />
+    </div>
+  </section>
+</Layout>
+
+<style lang="scss">
+  .hero {
+    padding: clamp(64px, 9vw, 120px) 0 clamp(32px, 5vw, 64px);
+
+    h1 em.accent { font-style: italic; color: $accent; }
+    .lede { max-width: 620px; margin-top: 16px; }
+  }
+
+  .hero-grid {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: clamp(32px, 5vw, 72px);
+    align-items: center;
+    min-width: 0;
+  }
+
+  .hero-copy,
+  .hero-globe {
+    min-width: 0;
+  }
+
+  @media (max-width: $bp-lg) {
+    .hero-grid { grid-template-columns: 1fr; }
+    .hero-globe { order: -1; max-width: 300px; margin: 0 auto; width: 100%; }
+  }
+
+  .quick {
+    margin-top: 32px;
+    display: flex;
+    gap: 28px;
+    flex-wrap: wrap;
+  }
+  .quick-item {
+    text-decoration: none;
+    color: $ink;
+    transition: color 140ms ease;
+
+    &:hover:not(.static) { color: $accent-deep; }
+
+    .n {
+      font-family: $font-serif;
+      font-size: 32px;
+      line-height: 1;
+      color: $ink;
+      margin-bottom: 4px;
+    }
+    .l {
+      font-size: $fs-meta;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: $muted;
+      font-weight: 600;
+    }
+  }
+
+  .section-head {
+    margin-bottom: 32px;
+    max-width: 620px;
+
+    h2 { margin-bottom: 8px; }
+    .sub { color: $ink-soft; margin: 0; }
+  }
+
+  .group-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+  @media (max-width: $bp-lg) { .group-grid { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: $bp-sm) { .group-grid { grid-template-columns: 1fr; } }
+
+  .group {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    padding: 24px;
+    background: $paper;
+    border: 1px solid $rule;
+    border-radius: $radius;
+    transition: border-color 140ms ease, transform 140ms ease;
+
+    &:hover {
+      transform: translateY(-1px);
+      border-color: color-mix(in srgb, $rule 60%, $accent 40%);
+    }
+
+    &.s-active {
+      background: $accent-soft;
+      border-color: color-mix(in srgb, $accent 30%, $rule 70%);
+    }
+    &.s-planned {
+      opacity: 0.82;
+    }
+
+    header {
+      display: grid;
+      gap: 4px;
+
+      h3 { margin: 4px 0 0; font-size: 20px; }
+
+      .loc {
+        font-size: 13px;
+        color: $muted;
+        letter-spacing: 0.02em;
+      }
+    }
+
+    .note {
+      color: $ink-soft;
+      margin: 0;
+      flex: 1;
+    }
+
+    footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      padding-top: 12px;
+      border-top: 1px solid $rule;
+      font-size: 13px;
+    }
+
+    .count { color: $ink-soft; }
+    .count strong { color: $ink; font-weight: 600; }
+    .hint { color: $muted; font-size: 12px; }
+
+    .apply-link {
+      color: $accent-deep;
+      text-decoration: none;
+      font-weight: 500;
+
+      &:hover { text-decoration: underline; }
+    }
+  }
+
+  .status {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 2px 8px;
+    border-radius: 999px;
+    align-self: flex-start;
+
+    &.s-active {
+      background: $accent;
+      color: $accent-ink;
+    }
+    &.s-forming {
+      background: color-mix(in srgb, $accent 20%, transparent);
+      color: $accent-deep;
+      border: 1px solid color-mix(in srgb, $accent 40%, transparent);
+    }
+    &.s-planned {
+      background: transparent;
+      color: $muted;
+      border: 1px dashed $rule;
+    }
+  }
+
+  .page-cta {
+    background: $paper;
+    border-top: 1px solid $rule;
+    border-bottom: 1px solid $rule;
+
+    .lede { max-width: 640px; }
+  }
+</style>

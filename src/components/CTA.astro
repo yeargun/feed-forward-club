@@ -1,0 +1,52 @@
+---
+import { applyPath, contactPath } from "../data/config";
+
+interface Props {
+  /** visual variant:
+   *  - "pair" (default): Apply primary + Contact ghost, side by side
+   *  - "stack": same, stacks on small screens
+   *  - "inline": small size, for header/footer
+   */
+  variant?: "pair" | "stack" | "inline";
+  /** reorder — put Contact first when the page leads with "get in touch". */
+  contactFirst?: boolean;
+}
+
+const { variant = "pair", contactFirst = false } = Astro.props;
+---
+
+<div class:list={["cta-buttons", `v-${variant}`]}>
+  {contactFirst ? (
+    <>
+      <a href={contactPath} class="btn btn-ghost">Contact</a>
+      <a href={applyPath} class="btn">Apply</a>
+    </>
+  ) : (
+    <>
+      <a href={applyPath} class="btn">Apply</a>
+      <a href={contactPath} class="btn btn-ghost">Contact</a>
+    </>
+  )}
+</div>
+
+<style lang="scss">
+  .cta-buttons {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .v-inline :global(.btn) {
+    padding: 8px 14px;
+    font-size: 14px;
+  }
+
+  .v-stack {
+    @media (max-width: $bp-md) {
+      flex-direction: column;
+      align-items: stretch;
+
+      :global(.btn) { justify-content: center; }
+    }
+  }
+</style>

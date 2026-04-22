@@ -1,0 +1,163 @@
+---
+import Layout from "../layouts/Layout.astro";
+import CTA from "../components/CTA.astro";
+import {
+  kindLabel,
+  formatEventDate,
+  upcomingEvents,
+  pastEvents,
+} from "../data/events";
+
+const upcoming = upcomingEvents();
+const past = pastEvents();
+---
+
+<Layout
+  title="Events"
+  description="Sessions, demos, and socials on the FeedForwardClub calendar."
+>
+  <section class="hero">
+    <div class="container">
+      <span class="eyebrow">Events</span>
+      <h1>On the <em class="accent">calendar.</em></h1>
+      <p class="lede">
+        Sessions, demos, and socials. Upcoming first; past for the record.
+      </p>
+    </div>
+  </section>
+
+  <hr class="rule" />
+
+  <section class="section" id="upcoming">
+    <div class="container">
+      <h2 class="h2line">Upcoming</h2>
+      {upcoming.length === 0 && <p class="empty">No upcoming dates listed yet. Check the news, or get in.</p>}
+      {upcoming.length > 0 && (
+        <ul class="list">
+          {upcoming.map((e) => (
+            <li>
+              <div class="meta">
+                <time datetime={e.date.slice(0, 10)}>{formatEventDate(e.date)}</time>
+                <span class="tag">{kindLabel[e.kind]}</span>
+              </div>
+              <h3>{e.title}</h3>
+              <div class="where">
+                {e.city}
+                {e.country && <span>, {e.country}</span>}
+              </div>
+              {e.blurb && <p class="b">{e.blurb}</p>}
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  </section>
+
+  <section class="section section-tight" id="past">
+    <div class="container">
+      <h2 class="h2line">Past</h2>
+      {past.length === 0 && <p class="empty">Nothing archived yet.</p>}
+      {past.length > 0 && (
+        <ul class="list list-muted">
+          {past.map((e) => (
+            <li>
+              <div class="meta">
+                <time datetime={e.date.slice(0, 10)}>{formatEventDate(e.date)}</time>
+                <span class="tag">{kindLabel[e.kind]}</span>
+              </div>
+              <h3>{e.title}</h3>
+              {e.blurb && <p class="b">{e.blurb}</p>}
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  </section>
+
+  <section class="section cta">
+    <div class="container">
+      <h2>Want to be on the list?</h2>
+      <CTA variant="stack" />
+    </div>
+  </section>
+</Layout>
+
+<style lang="scss">
+  .hero {
+    padding: clamp(72px, 10vw, 140px) 0 clamp(32px, 5vw, 64px);
+
+    .lede {
+      max-width: 520px;
+      margin-top: 16px;
+    }
+
+    h1 em.accent {
+      font-style: italic;
+      color: $accent;
+    }
+  }
+
+  .h2line {
+    font-size: $fs-h3;
+    font-family: $font-serif;
+    font-weight: 600;
+    margin: 0 0 1rem;
+  }
+
+  .list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    max-width: 640px;
+  }
+
+  .list li {
+    padding: 1.1rem 0;
+    border-bottom: 1px solid $rule;
+
+    h3 {
+      font-size: 1.1rem;
+      margin: 0.35em 0 0.2em;
+    }
+  }
+
+  .list.list-muted h3 {
+    font-size: 1rem;
+  }
+
+  .list-muted {
+    color: $ink-soft;
+  }
+
+  .meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px 12px;
+    font-size: $fs-small;
+  }
+
+  .where {
+    font-size: $fs-small;
+    color: $ink-soft;
+  }
+
+  .b {
+    font-size: $fs-small;
+    margin: 0.4em 0 0;
+    color: $ink-soft;
+  }
+
+  .empty {
+    color: $ink-soft;
+  }
+
+  .section-tight {
+    padding-top: 0;
+  }
+
+  .cta {
+    background: $paper;
+    border-top: 1px solid $rule;
+  }
+</style>
