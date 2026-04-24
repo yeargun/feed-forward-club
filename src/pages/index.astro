@@ -14,24 +14,24 @@ import { applyPath } from "../data/config";
 import HomeEvents from "../components/HomeEvents.astro";
 
 const howPreamble = [
-  "Feedback is not only a meeting activity. Members give and get feedback on their products between sessions and in the room, so the work keeps moving instead of waiting two weeks.",
-  "Every session starts with the work itself: what changed, what is in the backlog, which features matter, what should be cut, what is blocked, and how the next moves should be ordered.",
-  "Chit-chat is fine, but very little. The room exists to improve the product, not to fill time.",
-  "Respect the shared clock. Five minutes from one person is not just five minutes. It is five minutes multiplied by everyone listening, so we stay sharp and on point.",
+  "Feedback does not wait for the meeting. People share what they are building between sessions too, so the room already has some context when everyone shows up.",
+  "At the start, we go around the room: what changed, what is in the backlog, what feature is confusing, what feels stuck, and what could use another pair of eyes.",
+  "There is room to catch up and joke a little. Just not so much that the work gets buried.",
+  "We respect the clock because everyone is busy. Five minutes from one person is five minutes from everyone listening, so we keep things useful and moving.",
 ] as const;
 
 const howSteps = [
   {
-    title: "Bring the current product.",
-    body: "Show what exists now: product, prototype, backlog, user problem, feature decision, or the thing that is stuck. No deck required. Real work beats presentation.",
+    title: "Bring what you are working on.",
+    body: "It can be a product, prototype, backlog, landing page, user question, or a small decision you keep postponing. No deck needed. Just show the thing.",
   },
   {
-    title: "The room pressure-tests it.",
-    body: "People ask questions, challenge the order of work, point at weak assumptions, and suggest what to try next. Feedback is specific: backlog, features, positioning, users, execution.",
+    title: "The room looks at it with you.",
+    body: "People ask questions, notice what is unclear, share what they would try, and help you sort the next steps. The feedback stays close to the actual product.",
   },
   {
-    title: "Leave with the next move.",
-    body: "Before the session ends, you choose one concrete thing to do before the next meeting. At the next session, you open with what happened and the room keeps building from there.",
+    title: "Leave with one next step.",
+    body: "Before the session ends, you pick one specific thing to do before the next meeting. Next time, you start with what happened and where you are now.",
   },
 ] as const;
 
