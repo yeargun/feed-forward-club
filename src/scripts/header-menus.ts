@@ -3,7 +3,6 @@ const LEAVE_MS = 140;
 const MOBILE_BREAKPOINT = 760;
 const FULL_WIDTH_MAX = 1280;
 const DENSE_WIDTH_MAX = 960;
-const FLOAT_MARGIN_TOP = 12;
 const DENSE_RADIUS = 15;
 const HEADER_EASING = "cubic-bezier(0.22, 1, 0.36, 1)";
 const HEADER_DURATION = 280;
@@ -18,7 +17,6 @@ type DropdownRoot = HTMLElement & {
 type HeaderShellStyle = {
   width: string;
   borderRadius: string;
-  marginTop: string;
   boxShadow: string;
 };
 
@@ -51,7 +49,6 @@ function getHeaderShellStyle(dense: boolean): HeaderShellStyle {
   return {
     width: `${Math.round(dense ? denseWidth : fullWidth)}px`,
     borderRadius: `${dense && canFloat ? DENSE_RADIUS : 0}px`,
-    marginTop: `${dense && canFloat ? FLOAT_MARGIN_TOP : 0}px`,
     boxShadow: dense && canFloat ? DENSE_SHADOW : REST_SHADOW,
   };
 }
@@ -59,8 +56,8 @@ function getHeaderShellStyle(dense: boolean): HeaderShellStyle {
 function applyHeaderShellStyle(shell: HTMLElement, style: HeaderShellStyle) {
   shell.style.width = style.width;
   shell.style.borderRadius = style.borderRadius;
-  shell.style.marginTop = style.marginTop;
   shell.style.boxShadow = style.boxShadow;
+  shell.style.removeProperty("margin-top");
 }
 
 function initDenseHeader(header: HTMLElement) {
@@ -103,7 +100,6 @@ function initDenseHeader(header: HTMLElement) {
         {
           width: current.width,
           borderRadius: current.borderRadius,
-          marginTop: current.marginTop,
           boxShadow: current.boxShadow,
         },
         nextStyle,

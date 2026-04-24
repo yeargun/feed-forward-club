@@ -11,6 +11,28 @@ import {
 } from "../data/groups";
 import { memberStatus } from "../data/batches";
 import { applyPath } from "../data/config";
+import HomeEvents from "../components/HomeEvents.astro";
+
+const howPreamble = [
+  "You give and get feedback on what you are building in the open, between sessions and in the room. When a session starts, we open with a quick pass on what everyone is moving: backlog, features, how work is ordered, what is stuck. That orients the group before the hot seat.",
+  "A little chit-chat is fine; we keep it light. This is not a social hour.",
+  "Respect the shared clock. Your five minutes on the floor is five minutes for every other person in the room—so we stay on time and on point.",
+] as const;
+
+const howSteps = [
+  {
+    title: "You show up.",
+    body: "Sessions run every two weeks. Four to eight people in a room—through your chapter, a topical circle, or both. No agenda to prepare, no deck required.",
+  },
+  {
+    title: "You take the hot seat.",
+    body: "Each person gets ten to fifteen minutes. You share whatever is on your table—idea, prototype, live product, a decision you cannot make. The room asks questions. Then the room tells you what to try next.",
+  },
+  {
+    title: "You commit to one thing.",
+    body: "Before you leave you say one thing you will try before the next session. Not a goal—a specific thing. At the next session, you open with what happened.",
+  },
+] as const;
 
 const values = [
   {
@@ -23,18 +45,18 @@ const values = [
   },
   {
     title: "Genuine and respectful",
-    body: "Blunt is allowed. Cruel is not. ",
+    body: "Blunt is allowed. Cruel is not.",
   },
   {
-    title: "No hierarchy, yet",
-    body: "Until the culture sets, @yeargun holds the standards",
+    title: "Responsibility, not rank",
+    body: "Someone still has to protect the standard until the culture can do it alone.",
   },
 ];
 
 ---
 
 <Layout
-  description="Founders' circle: share the build, hear what to try next in small global rooms. Chapters by city, topical circles by obsession."
+  description="Founders' circle: share the build, hear what to try next in small global rooms. Chapters are global WhatsApp groups—IRL sometimes where it makes sense—plus topical circles by obsession."
   organization
 >
   <!-- HERO -->
@@ -50,7 +72,7 @@ const values = [
         <h1>Get feedback.<br/>Learn from the best builders.<br/>Share your expertise.</h1>
 
         <p class="lede">
-          It doesn't work, until it does.
+          Small room. High standards.
         </p>
         <CTA variant="stack" />
 
@@ -73,6 +95,31 @@ const values = [
           memberCount={memberCount}
           countries={countries}
         />
+      </div>
+    </div>
+  </section>
+
+  <HomeEvents />
+
+  <hr class="rule" />
+
+  <section class="section how-it-works" aria-labelledby="how-it-works-heading">
+    <div class="container">
+      <span class="eyebrow">How it works</span>
+      <h2 id="how-it-works-heading">Three things happen at every session.</h2>
+      <div class="how-preamble">
+        {howPreamble.map((p) => (
+          <p>{p}</p>
+        ))}
+      </div>
+      <div class="how-grid">
+        {howSteps.map((step, i) => (
+          <div class="how-step">
+            <div class="num">0{i + 1}</div>
+            <h3>{step.title}</h3>
+            <p>{step.body}</p>
+          </div>
+        ))}
       </div>
     </div>
   </section>
@@ -106,9 +153,9 @@ const values = [
     <div class="container">
       <div class="teaser-head">
         <span class="eyebrow">Groups</span>
-        <h2>Find the room <em class="accent">nearest to you.</em></h2>
+        <h2>Find your <em class="accent">chapter room.</em></h2>
         <p class="sub">
-          Chapters meet by city — founders building in <strong>deep tech</strong>, <strong>software</strong>, and <strong>hardware</strong>. Don't see yours? Help us start it.
+          Each chapter is a global WhatsApp group for founders building in <strong>deep tech</strong>, <strong>software</strong>, and <strong>hardware</strong>—mostly online, with occasional meetups where there's enough local interest. Don't see yours? Help us start it.
         </p>
       </div>
 
@@ -149,7 +196,7 @@ const values = [
   // — hero --------------------------------------------------------------------
   .hero {
     position: relative;
-    padding: clamp(64px, 9vw, 120px) 0 clamp(40px, 6vw, 80px);
+    padding: clamp(64px, 9vw, 120px) 0 clamp(28px, 5vw, 64px);
     overflow: hidden;
 
     &::before {
@@ -175,13 +222,19 @@ const values = [
     display: grid;
     grid-template-columns: 1.15fr 1fr;
     gap: clamp(32px, 6vw, 80px);
-    align-items: center;
+    align-items: start;
     min-width: 0;
   }
 
   .hero-copy,
   .hero-globe {
     min-width: 0;
+  }
+
+  @media (min-width: #{$bp-lg + 1px}) {
+    .hero-globe {
+      justify-self: end;
+    }
   }
 
   .hero-copy h1 em.accent { font-style: italic; color: $accent; }
@@ -237,11 +290,15 @@ const values = [
   }
 
   @media (max-width: $bp-lg) {
-    .hero-grid { grid-template-columns: 1fr; }
+    .hero-grid {
+      grid-template-columns: 1fr;
+      align-items: center;
+    }
     .hero-globe {
       max-width: min(340px, 100%);
       margin: 0 auto;
       width: 100%;
+      justify-self: center;
     }
   }
 
@@ -301,6 +358,54 @@ const values = [
   }
 
   .more { margin-top: 24px; position: relative; z-index: 1; }
+
+  .how-it-works {
+    h2 { max-width: 32rem; }
+    .how-preamble {
+      max-width: 42rem;
+      margin: 0 0 28px;
+      p {
+        margin: 0 0 0.9em;
+        color: $ink-soft;
+        font-size: 16px;
+        line-height: 1.55;
+      }
+      p:last-child { margin-bottom: 0; }
+    }
+    .how-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+      margin-top: 8px;
+      @media (min-width: $bp-lg) {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+    .how-step {
+      padding: 24px;
+      background: $paper;
+      border: 1px solid $rule;
+      border-radius: $radius;
+      position: relative;
+      box-shadow: 0 1px 2px rgba(11, 11, 13, 0.04);
+      transition: transform 220ms ease, box-shadow 220ms ease, border-color 220ms ease;
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 30px rgba(11, 11, 13, 0.08);
+        border-color: color-mix(in srgb, $accent 24%, $rule 76%);
+      }
+      .num {
+        position: absolute;
+        top: 18px;
+        right: 22px;
+        font-family: $font-serif;
+        color: $accent;
+        font-size: 16px;
+      }
+      h3 { margin-bottom: 8px; font-size: 20px; }
+      p { margin: 0; color: $ink-soft; font-size: 15px; }
+    }
+  }
 
   // — groups teaser -----------------------------------------------------------
   .groups-teaser {

@@ -1,105 +1,96 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import CTA from "../components/CTA.astro";
 ---
 
 <Layout
   title="Manifesto"
-  description="The principle, and the four values FeedForwardClub tries to hold as the room grows."
+  description="The standards FeedForwardClub tries to keep as the room grows."
   ogType="article"
 >
   <section class="hero">
     <div class="container">
       <span class="eyebrow">Manifesto</span>
-      <h1>What we try to <em class="accent">hold.</em></h1>
+      <h1>What we <em class="accent">protect</em> as we grow.</h1>
       <p class="lede">
-        These are not rules. They are the standards we keep reminding
-        ourselves of, especially as the room grows and it becomes easier to
-        forget.
+        Not rules. Not branding copy. Just the standards that keep the room
+        useful when it gets bigger and reputation starts crowding out signal.
       </p>
     </div>
   </section>
 
   <hr class="rule" />
 
-  
-
-  <hr class="rule" />
-
-  <!-- VALUES -->
   <section class="section manifesto">
     <div class="container">
       <span class="eyebrow">Culture</span>
-      <h2 class="section-title">Four things we try to get right.</h2>
+      <h2 class="section-title">Four standards for the room.</h2>
 
       <article class="entry">
         <header>
           <span class="num">I.</span>
-          <h3>Bias, almost not.</h3>
+          <h3>Signal over status.</h3>
         </header>
         <p>
-          The world is a ratchet: winners become more-winners. Capital finds
-          capital. Attention finds attention. The already-funded get funded
-          faster than the first-time founder with the better idea.
+          The world already over-rewards people who have won before. Capital
+          follows capital. Attention follows attention. The polished founder
+          gets heard before the unknown one with the better instinct.
         </p>
         <p>
-          We do not pretend to fix that. We refuse to replicate it in this
-          room. The composition is
-          <strong>roughly 60% non-winners and 40% winners</strong>, on
-          purpose. When that ratio flips, we recalibrate. A room where the
-          established voice is always the loudest is a room that teaches
-          everyone to sound established instead of <em>right</em>.
+          We are not here to replay that. The room should stay weighted toward
+          people with more to prove than to protect:
+          <strong>roughly 60% early builders and 40% established ones</strong>.
+          If that flips, the room starts teaching performance instead of
+          judgment.
         </p>
       </article>
 
       <article class="entry">
         <header>
           <span class="num">II.</span>
-          <h3>No racism. No sexism. No gatekeeping.</h3>
+          <h3>Respect is non-negotiable.</h3>
         </header>
         <p>
-          Zero tolerance, no negotiation, no "it was a joke". The room is
-          too small and the work too important to let any of it in.
+          No racism. No sexism. No gatekeeping. No hiding contempt inside
+          "banter" or "just being honest." If someone makes the room smaller
+          for other people, they are the problem.
         </p>
         <p>
-          Yes, previous accomplishments matter. We are not pretending
-          otherwise. They simply matter <em>less</em> here than they do
-          outside. What we pay attention to is
-          <span class="mark">your obsession</span> and
-          <span class="mark">your value proposition</span>. What are you
-          unreasonably fixated on, and who does it help?
+          Past work matters. It just does not buy immunity here. We care more
+          about what you are obsessed with, what truth you see early, and who
+          your work is actually for.
         </p>
       </article>
 
       <article class="entry">
         <header>
           <span class="num">III.</span>
-          <h3>Be genuine. Be respectful.</h3>
+          <h3>Be useful, not theatrical.</h3>
         </header>
         <p>
-          Blunt is allowed. Cruel is not. If your advice would be
-          useful to a friend at the exact stage this person is at, say it.
-          If it is only useful for making yourself sound clever, keep it to
-          yourself.
+          Blunt is fine. Cruel is lazy. Give the kind of feedback that helps
+          this person make a better move next week, not the kind that makes you
+          sound superior for thirty seconds.
         </p>
-    
+        <p>
+          The goal is not to win the room. The goal is to leave someone
+          clearer, sharper, and more capable than when they walked in.
+        </p>
       </article>
 
       <article class="entry">
         <header>
           <span class="num">IV.</span>
-          <h3>No hierarchy</h3>
+          <h3>Responsibility, not rank.</h3>
         </header>
         <p>
-          In the long run, this club should run on its culture, not on its
-          founder. No one needs another founder-cult.
+          This club does not need a social ladder. It does need people who take
+          responsibility for the room while the culture is still fragile.
         </p>
         <p>
-          In the early days, <strong>@yeargun</strong> makes sure the culture
-          sets properly and the standards stay high: picks the room, defends
-          the values, calls out drift. Not because he knows best, but because
-          someone has to hold the line while the habits set in. When the
-          culture holds itself, that role goes away.
+          A steward curates the room, protects the standard, and calls out
+          drift. That is stewardship, not status. If the culture gets strong
+          enough to do that on its own, the role should shrink, rotate, or
+          disappear.
         </p>
       </article>
 
@@ -108,8 +99,6 @@ import CTA from "../components/CTA.astro";
   </section>
 
   <hr class="rule" />
-
-
 </Layout>
 
 <style lang="scss">
@@ -120,39 +109,6 @@ import CTA from "../components/CTA.astro";
     h1 em.accent { font-style: italic; color: $accent; }
   }
 
-  // — preamble ---------------------------------------------------------------
-  .preamble .container { max-width: 780px; }
-
-  .preamble-card {
-    padding: clamp(32px, 5vw, 56px);
-    background: $paper;
-    border: 1px solid $rule;
-    border-left: 4px solid $accent;
-    border-radius: $radius-lg;
-
-    .tag-label {
-      display: inline-block;
-      font-size: $fs-meta;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      color: $accent-deep;
-      font-weight: 600;
-      margin-bottom: 12px;
-    }
-
-    h2 { margin: 0 0 24px; }
-
-    p {
-      font-size: 18px;
-      line-height: 1.6;
-      color: $ink-soft;
-    }
-
-    strong { color: $ink; font-weight: 600; }
-    strong.forward { color: $amber-deep; font-style: italic; }
-  }
-
-  // — values -----------------------------------------------------------------
   .manifesto .container { max-width: 760px; }
 
   .section-title { margin-bottom: 24px; }
@@ -199,12 +155,5 @@ import CTA from "../components/CTA.astro";
     font-style: italic;
     color: $ink;
     margin-top: 20px;
-  }
-
-  .cta-section {
-    text-align: left;
-    background: $paper;
-    border-top: 1px solid $rule;
-    border-bottom: 1px solid $rule;
   }
 </style>

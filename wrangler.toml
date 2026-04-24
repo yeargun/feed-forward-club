@@ -5,7 +5,19 @@ name = "feed-forward-club"
 main = "./worker/index.js"
 compatibility_date = "2025-10-15"
 workers_dev = true
+routes = [
+  { pattern = "feedforwardclub.com/*", zone_name = "feedforwardclub.com" },
+]
 
 [assets]
 directory = "./dist"
 binding = "ASSETS"
+
+# Hot-update /calendar.json without redeploying the site:
+#   1) npx wrangler kv namespace create "feedforward-club-calendar"
+#   2) Put the id below, redeploy: npm run deploy
+#   3) Push JSON: npm run calendar:push
+# If this block is commented out, /calendar.json is served from the static build only.
+# [[kv_namespaces]]
+# binding = "CALENDAR"
+# id = "paste-kv-namespace-id"

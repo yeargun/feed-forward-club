@@ -1,4 +1,12 @@
+import calendar from "./calendar.json";
+
 export type EventKind = "meet" | "session" | "demo" | "social";
+
+export type EventSpotlight = {
+  speaker: string;
+  title?: string;
+  summary?: string;
+};
 
 export type Event = {
   slug: string;
@@ -11,6 +19,10 @@ export type Event = {
   blurb?: string;
   /** Slug of the chapter or topic this event belongs to. Optional. */
   group?: string;
+  /** Freeform labels; lowercase or short phrases work. */
+  tags?: string[];
+  /** Optional talk or deck. Most meets have no formal spotlight. */
+  spotlight?: EventSpotlight;
 };
 
 export type NewsItem = {
@@ -22,56 +34,9 @@ export type NewsItem = {
   link?: string;
 };
 
-export const events: Event[] = [
-  {
-    slug: "ankara-session-07",
-    title: "Ankara · Session 07",
-    kind: "session",
-    date: "2026-05-15",
-    city: "Ankara",
-    country: "TR",
-    blurb: "Members take turns on the hot seat. Share your work, hear what to try next.",
-    group: "ankara",
-  },
-  {
-    slug: "ankara-meet-06",
-    title: "Ankara · Session 06",
-    kind: "meet",
-    date: "2026-05-29",
-    city: "Ankara",
-    country: "TR",
-    blurb: "Hot seats, advice round, commitments for the next two weeks.",
-    group: "ankara",
-  },
-  {
-    slug: "istanbul-first-meet",
-    title: "Istanbul · First meet-up",
-    kind: "meet",
-    date: "2026-06-07",
-    city: "Istanbul",
-    country: "TR",
-    blurb: "Informal first gathering for Istanbul-based members and hopefuls.",
-    group: "istanbul",
-  },
-  {
-    slug: "ai-circle-kickoff",
-    title: "AI / ML Circle · Kickoff",
-    kind: "meet",
-    date: "2026-06-21",
-    blurb: "First session of the AI / ML topical circle. Remote-first.",
-    group: "ai-ml",
-  },
-  {
-    slug: "ankara-demo-night",
-    title: "Ankara · Demo night",
-    kind: "demo",
-    date: "2026-07-10",
-    city: "Ankara",
-    country: "TR",
-    blurb: "Short demos from members. Closed to members and invited guests.",
-    group: "ankara",
-  },
-];
+type CalendarFile = { schemaVersion: number; events: Event[] };
+
+export const events: Event[] = (calendar as CalendarFile).events;
 
 export const news: NewsItem[] = [
   {

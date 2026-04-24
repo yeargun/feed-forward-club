@@ -10,7 +10,7 @@ export const siteName = "FeedForwardClub";
 export const siteUrl = import.meta.env.PUBLIC_SITE_URL || defaultSiteUrl;
 export const siteTagline = "Get feedback. Learn from the best builders. Share your expertise.";
 export const siteDescription =
-  "A global founders' circle where you share what you're building, get candid feedback from people who've been there, and find your next move. Chapters by city. Circles by obsession.";
+  "A global founders' circle where you share what you're building, get candid feedback from people who've been there, and find your next move. Chapters are global WhatsApp groups with regional roots; circles cluster by obsession.";
 
 export const contactEmail =
   import.meta.env.PUBLIC_CONTACT_EMAIL || defaultContactEmail;
@@ -35,3 +35,20 @@ export const applyMailto =
 export const contactMailto =
   `mailto:${contactEmail}` +
   `?subject=${encodeURIComponent("FeedForwardClub — hello")}`;
+
+export const calendarEmbedUrl = (
+  import.meta.env.PUBLIC_CALENDAR_EMBED_URL as string | undefined
+)?.trim() || "";
+
+export const calendarSubscribeUrl = (
+  import.meta.env.PUBLIC_CALENDAR_ICS_URL as string | undefined
+)?.trim() || "";
+
+/** When true, upcoming lists refetch /calendar.json after load. Default on: use PUBLIC_LIVE_CALENDAR=false to disable. Pair with Cloudflare KV (see wrangler.toml) to update the calendar without redeploying. */
+export const liveCalendar =
+  (import.meta.env.PUBLIC_LIVE_CALENDAR as string | undefined) !== "false";
+
+/** URL for the live refetch. Default `/calendar.json` (emitted from `src/data/calendar.json` on dev/build). */
+export const calendarJsonUrl = (
+  (import.meta.env.PUBLIC_CALENDAR_JSON_URL as string | undefined) || "/calendar.json"
+).trim();

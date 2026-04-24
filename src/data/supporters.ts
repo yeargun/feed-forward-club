@@ -61,13 +61,4 @@ export const supporters: Supporter[] = [
     logomark: "Cloudflare",
     logoUrl: "https://cdn.simpleicons.org/cloudflare",
   },
-  {
-    name: "Vercel for Startups",
-    program: "Vercel",
-    url: "https://vercel.com/startups",
-    note: "Platform credits, frontend observability, edge runtime.",
-    accent: "#000000",
-    logomark: "Vercel",
-    logoUrl: "https://cdn.simpleicons.org/vercel",
-  },
 ];

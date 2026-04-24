@@ -4,13 +4,14 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "astro dev",
-    "start": "astro dev",
-    "build": "astro build",
+    "dev": "node scripts/sync-calendar-to-public.mjs && astro dev",
+    "start": "node scripts/sync-calendar-to-public.mjs && astro dev",
+    "build": "node scripts/sync-calendar-to-public.mjs && astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "deploy": "astro build && wrangler deploy",
-    "worker:preview": "astro build && wrangler dev"
+    "deploy": "npm run build && wrangler deploy",
+    "worker:preview": "npm run build && wrangler dev",
+    "calendar:push": "node scripts/publish-calendar-kv.mjs"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.2.1",

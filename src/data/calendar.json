@@ -1,0 +1,75 @@
+{
+  "schemaVersion": 1,
+  "events": [
+    {
+      "slug": "founded-2026",
+      "title": "Feedforward Club · Founded",
+      "kind": "social",
+      "date": "2026-04-20",
+      "blurb": "The club is live. Chapters and circles on a three-week cadence from here on."
+    },
+    {
+      "slug": "ankara-first-meetup",
+      "title": "Ankara · First meet-up",
+      "kind": "meet",
+      "date": "2026-05-09",
+      "city": "Ankara",
+      "country": "TR",
+      "blurb": "First in-person meet. Hot seats, advice round, commitments for the next three weeks.",
+      "group": "ankara",
+      "tags": ["ankara", "first", "talk", "web", "product"],
+      "spotlight": {
+        "speaker": "Argun Sayilgan",
+        "summary": "How he built the world's most performant document editor on the web."
+      }
+    },
+    {
+      "slug": "ankara-session-2026-05-30",
+      "title": "Ankara · Session",
+      "kind": "session",
+      "date": "2026-05-30",
+      "city": "Ankara",
+      "country": "TR",
+      "blurb": "Members take turns on the hot seat. Share your work, hear what to try next.",
+      "group": "ankara"
+    },
+    {
+      "slug": "ankara-session-2026-08-22",
+      "title": "Ankara · Session",
+      "kind": "session",
+      "date": "2026-08-22",
+      "city": "Ankara",
+      "country": "TR",
+      "blurb": "Members take turns on the hot seat. Share your work, hear what to try next.",
+      "group": "ankara"
+    },
+    {
+      "slug": "ankara-session-2026-09-12",
+      "title": "Ankara · Session",
+      "kind": "session",
+      "date": "2026-09-12",
+      "city": "Ankara",
+      "country": "TR",
+      "blurb": "Members take turns on the hot seat. Share your work, hear what to try next.",
+      "group": "ankara"
+    },
+    {
+      "slug": "istanbul-meetup-2026-10-03",
+      "title": "Istanbul · Meet-up",
+      "kind": "meet",
+      "date": "2026-10-03",
+      "city": "Istanbul",
+      "country": "TR",
+      "blurb": "Istanbul chapter on the same three-week rhythm.",
+      "group": "istanbul"
+    },
+    {
+      "slug": "ai-circle-2026-10-24",
+      "title": "AI / ML Circle · Session",
+      "kind": "meet",
+      "date": "2026-10-24",
+      "blurb": "Topical circle meet. Remote-first.",
+      "group": "ai-ml"
+    }
+  ]
+}

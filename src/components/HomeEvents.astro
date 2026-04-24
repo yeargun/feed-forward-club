@@ -1,0 +1,327 @@
+---
+import {
+  kindLabel,
+  formatEventDate,
+  upcomingEvents,
+} from "../data/events";
+import {
+  calendarSubscribeUrl,
+  calendarEmbedUrl,
+  liveCalendar,
+  calendarJsonUrl,
+} from "../data/config";
+import CalendarEmbed from "./CalendarEmbed.astro";
+
+interface Props {
+  limit?: number;
+}
+
+const { limit = 5 } = Astro.props;
+const upcoming = upcomingEvents().slice(0, limit);
+const showEmbed = Boolean(calendarEmbedUrl);
+const showEventRows = upcoming.length > 0 || liveCalendar;
+---
+
+<section class="home-events" aria-labelledby="home-events-heading">
+  <div
+    class:list={["wide", "home-events-grid", { "home-events-grid--no-embed": !showEmbed }]}
+  >
+    <div class="home-events-copy">
+      <span class="eyebrow">Events</span>
+      <h2 id="home-events-heading">
+        What&apos;s <em class="accent">next</em>
+      </h2>
+      <p class="lede">
+        {calendarSubscribeUrl
+          ? "Upcoming sessions and meets. Talks and slides are not always on the program—when they are, we show a spotlight. Subscribe with iCal to keep the public calendar in sync with yours."
+          : "Upcoming sessions and meets from chapters and circles. Talks, slides, and a formal title are meet-by-meet; spotlights list the speaker when we have one."}
+      </p>
+
+      {upcoming.length === 0 && !liveCalendar && (
+        <p class="empty">No upcoming dates listed yet — check back soon.</p>
+      )}
+
+      {liveCalendar && upcoming.length === 0 && (
+        <p class="empty" id="home-events-ssr-empty">
+          No upcoming dates listed yet — check back soon.
+        </p>
+      )}
+
+      {showEventRows && (
+        <ul class="event-rows" id="home-events-rows">
+          {upcoming.map((e) => (
+            <li>
+              <div class="row-meta">
+                <time datetime={e.date.slice(0, 10)}>{formatEventDate(e.date)}</time>
+                <span class="tag">{kindLabel[e.kind]}</span>
+              </div>
+              <div class="row-body">
+                <span class="row-title">{e.title}</span>
+                {(e.city || e.country) && (
+                  <span class="row-where">
+                    {e.city}
+                    {e.country && <span>, {e.country}</span>}
+                  </span>
+                )}
+                {e.tags && e.tags.length > 0 && (
+                  <div class="ev-chips" aria-label="Tags">
+                    {e.tags.map((t) => (
+                      <span class="ev-chip">{t}</span>
+                    ))}
+                  </div>
+                )}
+                {e.spotlight && (
+                  <p class="row-spotlight">
+                    <span class="spotlight-name">{e.spotlight.speaker}</span>
+                    {e.spotlight.title && (
+                      <>
+                        <span class="spotlight-sep"> · </span>
+                        <span class="spotlight-title">{e.spotlight.title}</span>
+                      </>
+                    )}
+                    {e.spotlight.summary && (
+                      <>
+                        <span class="spotlight-sep"> — </span>
+                        <span class="spotlight-summary">{e.spotlight.summary}</span>
+                      </>
+                    )}
+                  </p>
+                )}
+              </div>
+            </li>
+          ))}
+        </ul>
+      )}
+
+      {liveCalendar && (
+        <>
+          <script is:inline src="/calendar-refresh.js"></script>
+          <script define:vars={{ calendarJsonUrl, limit }}>
+            (function () {
+              function go() {
+                if (!window.ffcCalendarRefresh) return;
+                window.ffcCalendarRefresh.mountHome({
+                  endpoint: calendarJsonUrl,
+                  limit: limit,
+                  listId: "home-events-rows",
+                  emptyId: "home-events-ssr-empty",
+                });
+              }
+              if (document.readyState === "loading") {
+                document.addEventListener("DOMContentLoaded", go);
+              } else {
+                go();
+              }
+            })();
+          </script>
+        </>
+      )}
+
+      <div class="home-events-foot">
+        <a href="/events" class="btn btn-ghost">
+          Full calendar
+        </a>
+        {calendarSubscribeUrl && (
+          <a
+            class="link-cal"
+            href={calendarSubscribeUrl}
+            rel="noopener noreferrer"
+          >
+            Subscribe (iCal)
+          </a>
+        )}
+      </div>
+    </div>
+
+    {showEmbed && (
+      <div class="home-events-aside">
+        <CalendarEmbed compact />
+      </div>
+    )}
+  </div>
+</section>
+
+<style lang="scss">
+  .home-events {
+    padding: clamp(20px, 3.5vw, 40px) 0 clamp(36px, 6vw, 72px);
+    border-bottom: 1px solid $rule-soft;
+  }
+
+  .home-events-grid {
+    display: grid;
+    gap: clamp(28px, 5vw, 48px);
+    align-items: start;
+
+    @media (min-width: $bp-lg) {
+      grid-template-columns: minmax(0, 1fr) minmax(260px, 380px);
+    }
+
+    &--no-embed {
+      @media (min-width: $bp-lg) {
+        grid-template-columns: 1fr;
+      }
+    }
+  }
+
+  .home-events-copy {
+    min-width: 0;
+  }
+
+  .home-events-copy h2 {
+    margin: 0 0 0.35em;
+    font-size: clamp(1.35rem, 2.2vw, $fs-h3);
+  }
+
+  .home-events-copy h2 em.accent {
+    font-style: italic;
+    color: $accent;
+  }
+
+  .lede {
+    margin: 0 0 1.25rem;
+    max-width: 36rem;
+    color: $ink-soft;
+    font-size: 15px;
+    line-height: 1.5;
+  }
+
+  .empty {
+    margin: 0 0 1rem;
+    color: $ink-soft;
+    font-size: 15px;
+  }
+
+  .home-events-foot {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px 20px;
+  }
+
+  .link-cal {
+    font-size: 14px;
+    font-weight: 600;
+    color: $accent-deep;
+    text-decoration: none;
+  }
+
+  .link-cal:hover {
+    text-decoration: underline;
+  }
+
+  .home-events-aside {
+    min-width: 0;
+  }
+</style>
+
+<style is:global lang="scss">
+  .home-events {
+    .event-rows {
+      list-style: none;
+      margin: 0 0 1.25rem;
+      padding: 0;
+      max-width: 40rem;
+    }
+
+    .event-rows li {
+      display: grid;
+      gap: 2px 12px;
+      padding: 12px 0;
+      border-bottom: 1px solid $rule-soft;
+      grid-template-columns: auto minmax(0, 1fr);
+      grid-template-areas: "meta body";
+    }
+
+    @media (max-width: $bp-sm) {
+      .event-rows li {
+        grid-template-columns: 1fr;
+        grid-template-areas:
+          "meta"
+          "body";
+      }
+    }
+
+    .row-meta {
+      grid-area: meta;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 6px;
+      min-width: 7.5rem;
+      font-size: $fs-small;
+      color: $ink-soft;
+    }
+
+    .row-meta time {
+      font-weight: 600;
+      color: $ink;
+      white-space: nowrap;
+    }
+
+    .event-rows .tag {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: $accent-deep;
+      background: $accent-soft;
+      padding: 2px 8px;
+      border-radius: 999px;
+    }
+
+    .row-body {
+      grid-area: body;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      min-width: 0;
+    }
+
+    .row-title {
+      font-weight: 600;
+      font-size: 15px;
+      line-height: 1.3;
+    }
+
+    .row-where {
+      font-size: $fs-small;
+      color: $ink-soft;
+    }
+
+    .ev-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .ev-chip {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: lowercase;
+      color: $ink-soft;
+      border: 1px solid $rule-soft;
+      padding: 2px 8px;
+      border-radius: 999px;
+    }
+
+    .row-spotlight {
+      margin: 2px 0 0;
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .row-spotlight .spotlight-name {
+      font-weight: 600;
+      color: $ink;
+    }
+
+    .row-spotlight .spotlight-title {
+      font-style: italic;
+    }
+
+    .row-spotlight .spotlight-summary {
+      color: $ink-soft;
+    }
+  }
+</style>

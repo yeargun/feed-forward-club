@@ -7,9 +7,18 @@ import {
   upcomingEvents,
   pastEvents,
 } from "../data/events";
+import {
+  calendarEmbedUrl,
+  calendarSubscribeUrl,
+  liveCalendar,
+  calendarJsonUrl,
+} from "../data/config";
+import CalendarEmbed from "../components/CalendarEmbed.astro";
 
 const upcoming = upcomingEvents();
 const past = pastEvents();
+const showCalendarEmbed = Boolean(calendarEmbedUrl);
+const showUpcoming = upcoming.length > 0 || liveCalendar;
 ---
 
 <Layout
@@ -21,7 +30,8 @@ const past = pastEvents();
       <span class="eyebrow">Events</span>
       <h1>On the <em class="accent">calendar.</em></h1>
       <p class="lede">
-        Sessions, demos, and socials. Upcoming first; past for the record.
+        Sessions, demos, and socials. A title, slides, or a formal talk are optional—when one is
+        scheduled, the speaker and topic show as a spotlight. Upcoming first; past for the record.
       </p>
     </div>
   </section>
@@ -29,27 +39,87 @@ const past = pastEvents();
   <hr class="rule" />
 
   <section class="section" id="upcoming">
-    <div class="container">
-      <h2 class="h2line">Upcoming</h2>
-      {upcoming.length === 0 && <p class="empty">No upcoming dates listed yet. Check the news, or get in.</p>}
-      {upcoming.length > 0 && (
-        <ul class="list">
-          {upcoming.map((e) => (
-            <li>
-              <div class="meta">
-                <time datetime={e.date.slice(0, 10)}>{formatEventDate(e.date)}</time>
-                <span class="tag">{kindLabel[e.kind]}</span>
-              </div>
-              <h3>{e.title}</h3>
-              <div class="where">
-                {e.city}
-                {e.country && <span>, {e.country}</span>}
-              </div>
-              {e.blurb && <p class="b">{e.blurb}</p>}
-            </li>
-          ))}
-        </ul>
-      )}
+    <div class:list={["container", showCalendarEmbed && "events-split"]}>
+      <div class="events-primary">
+        <h2 class="h2line">Upcoming</h2>
+        {upcoming.length === 0 && !liveCalendar && (
+          <p class="empty">No upcoming dates listed yet. Check the news, or get in.</p>
+        )}
+        {liveCalendar && upcoming.length === 0 && (
+          <p class="empty" id="events-upcoming-empty">No upcoming dates listed yet. Check the news, or get in.</p>
+        )}
+        {showUpcoming && (
+          <ul class="list" id="events-upcoming-rows">
+            {upcoming.map((e) => (
+              <li>
+                <div class="meta">
+                  <time datetime={e.date.slice(0, 10)}>{formatEventDate(e.date)}</time>
+                  <span class="tag">{kindLabel[e.kind]}</span>
+                </div>
+                <h3>{e.title}</h3>
+                <div class="where">
+                  {e.city}
+                  {e.country && <span>, {e.country}</span>}
+                </div>
+                {e.tags && e.tags.length > 0 && (
+                  <div class="ev-chips" aria-label="Tags">
+                    {e.tags.map((t) => (
+                      <span class="ev-chip">{t}</span>
+                    ))}
+                  </div>
+                )}
+                {e.spotlight && (
+                  <p class="spotlight">
+                    <span class="spotlight-name">{e.spotlight.speaker}</span>
+                    {e.spotlight.title && (
+                      <>
+                        <span class="spotlight-sep"> · </span>
+                        <span class="spotlight-title">{e.spotlight.title}</span>
+                      </>
+                    )}
+                    {e.spotlight.summary && (
+                      <>
+                        <span class="spotlight-sep"> — </span>
+                        <span class="spotlight-summary">{e.spotlight.summary}</span>
+                      </>
+                    )}
+                  </p>
+                )}
+                {e.blurb && <p class="b">{e.blurb}</p>}
+              </li>
+            ))}
+          </ul>
+        )}
+        {liveCalendar && (
+          <>
+            <script is:inline src="/calendar-refresh.js"></script>
+            <script define:vars={{ calendarJsonUrl }}>
+              (function () {
+                function go() {
+                  if (!window.ffcCalendarRefresh) return;
+                  window.ffcCalendarRefresh.mountPage({
+                    endpoint: calendarJsonUrl,
+                    listId: "events-upcoming-rows",
+                    emptyId: "events-upcoming-empty",
+                  });
+                }
+                if (document.readyState === "loading") {
+                  document.addEventListener("DOMContentLoaded", go);
+                } else {
+                  go();
+                }
+              })();
+            </script>
+          </>
+        )}
+        {calendarSubscribeUrl && (
+          <p class="cal-hint">
+            <a href={calendarSubscribeUrl} rel="noopener noreferrer">Subscribe (iCal)</a>
+            <span class="cal-hint-d"> — add the public calendar to Google, Apple, etc.</span>
+          </p>
+        )}
+      </div>
+      {showCalendarEmbed && <CalendarEmbed compact />}
     </div>
   </section>
 
@@ -66,6 +136,30 @@ const past = pastEvents();
                 <span class="tag">{kindLabel[e.kind]}</span>
               </div>
               <h3>{e.title}</h3>
+              {e.tags && e.tags.length > 0 && (
+                <div class="ev-chips" aria-label="Tags">
+                  {e.tags.map((t) => (
+                    <span class="ev-chip">{t}</span>
+                  ))}
+                </div>
+              )}
+              {e.spotlight && (
+                <p class="spotlight">
+                  <span class="spotlight-name">{e.spotlight.speaker}</span>
+                  {e.spotlight.title && (
+                    <>
+                      <span class="spotlight-sep"> · </span>
+                      <span class="spotlight-title">{e.spotlight.title}</span>
+                    </>
+                  )}
+                  {e.spotlight.summary && (
+                    <>
+                      <span class="spotlight-sep"> — </span>
+                      <span class="spotlight-summary">{e.spotlight.summary}</span>
+                    </>
+                  )}
+                </p>
+              )}
               {e.blurb && <p class="b">{e.blurb}</p>}
             </li>
           ))}
@@ -87,7 +181,7 @@ const past = pastEvents();
     padding: clamp(72px, 10vw, 140px) 0 clamp(32px, 5vw, 64px);
 
     .lede {
-      max-width: 520px;
+      max-width: 560px;
       margin-top: 16px;
     }
 
@@ -97,6 +191,42 @@ const past = pastEvents();
     }
   }
 
+  .events-split {
+    display: grid;
+    gap: clamp(28px, 4vw, 40px);
+    align-items: start;
+    max-width: 1080px;
+
+    @media (min-width: $bp-lg) {
+      grid-template-columns: minmax(0, 1fr) minmax(260px, 380px);
+    }
+  }
+
+  .events-primary {
+    min-width: 0;
+  }
+
+  .cal-hint {
+    margin: 1.25rem 0 0;
+    font-size: $fs-small;
+    color: $ink-soft;
+    max-width: 640px;
+  }
+
+  .cal-hint a {
+    font-weight: 600;
+    color: $accent-deep;
+    text-decoration: none;
+  }
+
+  .cal-hint a:hover {
+    text-decoration: underline;
+  }
+
+  .cal-hint-d {
+    font-weight: 400;
+  }
+
   .h2line {
     font-size: $fs-h3;
     font-family: $font-serif;
@@ -104,48 +234,93 @@ const past = pastEvents();
     margin: 0 0 1rem;
   }
 
-  .list {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    max-width: 640px;
-  }
-
-  .list li {
-    padding: 1.1rem 0;
-    border-bottom: 1px solid $rule;
-
-    h3 {
-      font-size: 1.1rem;
-      margin: 0.35em 0 0.2em;
+  #past {
+    .list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      max-width: 640px;
     }
-  }
 
-  .list.list-muted h3 {
-    font-size: 1rem;
-  }
+    .list li {
+      padding: 1.1rem 0;
+      border-bottom: 1px solid $rule;
 
-  .list-muted {
-    color: $ink-soft;
-  }
+      h3 {
+        font-size: 1.1rem;
+        margin: 0.35em 0 0.2em;
+      }
+    }
 
-  .meta {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 8px 12px;
-    font-size: $fs-small;
-  }
+    .list.list-muted h3 {
+      font-size: 1rem;
+    }
 
-  .where {
-    font-size: $fs-small;
-    color: $ink-soft;
-  }
+    .list-muted {
+      color: $ink-soft;
+    }
 
-  .b {
-    font-size: $fs-small;
-    margin: 0.4em 0 0;
-    color: $ink-soft;
+    .meta {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px 12px;
+      font-size: $fs-small;
+    }
+
+    .b {
+      font-size: $fs-small;
+      margin: 0.4em 0 0;
+      color: $ink-soft;
+    }
+
+    .ev-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin: 0.4rem 0 0;
+    }
+
+    .ev-chip {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: lowercase;
+      color: $ink-soft;
+      border: 1px solid $rule-soft;
+      padding: 2px 8px;
+      border-radius: 999px;
+    }
+
+    .spotlight {
+      font-size: $fs-small;
+      margin: 0.4rem 0 0;
+      line-height: 1.45;
+    }
+
+    .spotlight-name {
+      font-weight: 600;
+      color: $ink;
+    }
+
+    .spotlight-title {
+      font-style: italic;
+    }
+
+    .spotlight-summary {
+      color: $ink-soft;
+    }
+
+    .list-muted .spotlight-name,
+    .list-muted .spotlight-summary,
+    .list-muted .spotlight-title {
+      color: inherit;
+    }
+
+    .list-muted .ev-chip {
+      border-color: $rule;
+      opacity: 0.9;
+    }
   }
 
   .empty {
@@ -159,5 +334,91 @@ const past = pastEvents();
   .cta {
     background: $paper;
     border-top: 1px solid $rule;
+  }
+</style>
+
+<style is:global lang="scss">
+  #events-upcoming-rows {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    max-width: 640px;
+  }
+
+  #events-upcoming-rows > li {
+    padding: 1.1rem 0;
+    border-bottom: 1px solid $rule;
+  }
+
+  #events-upcoming-rows > li h3 {
+    font-size: 1.1rem;
+    margin: 0.35em 0 0.2em;
+  }
+
+  #events-upcoming-rows .meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px 12px;
+    font-size: $fs-small;
+  }
+
+  #events-upcoming-rows .where {
+    font-size: $fs-small;
+    color: $ink-soft;
+  }
+
+  #events-upcoming-rows .b {
+    font-size: $fs-small;
+    margin: 0.4em 0 0;
+    color: $ink-soft;
+  }
+
+  #events-upcoming-rows .ev-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin: 0.4rem 0 0;
+  }
+
+  #events-upcoming-rows .ev-chip {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: lowercase;
+    color: $ink-soft;
+    border: 1px solid $rule-soft;
+    padding: 2px 8px;
+    border-radius: 999px;
+  }
+
+  #events-upcoming-rows .tag {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: $accent-deep;
+    background: $accent-soft;
+    padding: 2px 8px;
+    border-radius: 999px;
+  }
+
+  #events-upcoming-rows .spotlight {
+    font-size: $fs-small;
+    margin: 0.4rem 0 0;
+    line-height: 1.45;
+  }
+
+  #events-upcoming-rows .spotlight-name {
+    font-weight: 600;
+    color: $ink;
+  }
+
+  #events-upcoming-rows .spotlight-title {
+    font-style: italic;
+  }
+
+  #events-upcoming-rows .spotlight-summary {
+    color: $ink-soft;
   }
 </style>
