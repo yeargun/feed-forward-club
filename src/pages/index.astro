@@ -14,23 +14,24 @@ import { applyPath } from "../data/config";
 import HomeEvents from "../components/HomeEvents.astro";
 
 const howPreamble = [
-  "You give and get feedback on what you are building in the open, between sessions and in the room. When a session starts, we open with a quick pass on what everyone is moving: backlog, features, how work is ordered, what is stuck. That orients the group before the hot seat.",
-  "A little chit-chat is fine; we keep it light. This is not a social hour.",
-  "Respect the shared clock. Your five minutes on the floor is five minutes for every other person in the room—so we stay on time and on point.",
+  "Feedback is not only a meeting activity. Members give and get feedback on their products between sessions and in the room, so the work keeps moving instead of waiting two weeks.",
+  "Every session starts with the work itself: what changed, what is in the backlog, which features matter, what should be cut, what is blocked, and how the next moves should be ordered.",
+  "Chit-chat is fine, but very little. The room exists to improve the product, not to fill time.",
+  "Respect the shared clock. Five minutes from one person is not just five minutes. It is five minutes multiplied by everyone listening, so we stay sharp and on point.",
 ] as const;
 
 const howSteps = [
   {
-    title: "You show up.",
-    body: "Sessions run every two weeks. Four to eight people in a room—through your chapter, a topical circle, or both. No agenda to prepare, no deck required.",
+    title: "Bring the current product.",
+    body: "Show what exists now: product, prototype, backlog, user problem, feature decision, or the thing that is stuck. No deck required. Real work beats presentation.",
   },
   {
-    title: "You take the hot seat.",
-    body: "Each person gets ten to fifteen minutes. You share whatever is on your table—idea, prototype, live product, a decision you cannot make. The room asks questions. Then the room tells you what to try next.",
+    title: "The room pressure-tests it.",
+    body: "People ask questions, challenge the order of work, point at weak assumptions, and suggest what to try next. Feedback is specific: backlog, features, positioning, users, execution.",
   },
   {
-    title: "You commit to one thing.",
-    body: "Before you leave you say one thing you will try before the next session. Not a goal—a specific thing. At the next session, you open with what happened.",
+    title: "Leave with the next move.",
+    body: "Before the session ends, you choose one concrete thing to do before the next meeting. At the next session, you open with what happened and the room keeps building from there.",
   },
 ] as const;
 
